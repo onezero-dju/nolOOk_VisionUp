@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
-class File extends StatelessWidget {
-  const File({super.key});
+//FolderAdd 아이콘에 대한 클래스
+class FolderAdd extends StatelessWidget {
+  const FolderAdd({super.key});
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
       onPressed: () {},
       icon: Icon(
-        Icons.folder,
-        size: MediaQuery.of(context).size.width * 0.29,
+        Icons.create_new_folder,
+        size: MediaQuery.of(context).size.width * 0.13,
         color: Colors.blue,
       ),
     );
