@@ -19,6 +19,7 @@ class MemoScreen extends StatelessWidget {
         body: Column(
           children: [
             AppBar(
+              leadingWidth: 200,
               leading: const Row(
                 children: [
                   FolderMove(),

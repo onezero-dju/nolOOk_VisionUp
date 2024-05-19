@@ -22,7 +22,7 @@ class _MarkdownEditorState extends State<MarkdownEditor> {
       children: [
         // 투명한 TextField
         SizedBox(
-          height: MediaQuery.of(context).size.height * 0.81,
+          height: MediaQuery.of(context).size.height * 0.9,
           child: TextField(
             controller: _controller,
             maxLines: null,
@@ -32,9 +32,7 @@ class _MarkdownEditorState extends State<MarkdownEditor> {
             ),
             style: const TextStyle(color: Colors.black),
             cursorColor: Colors.black,
-            onChanged: (text) {
-              setState(() {});
-            },
+            onChanged: (text) {},
           ),
         ),
       ],

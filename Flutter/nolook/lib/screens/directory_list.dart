@@ -5,8 +5,35 @@ import 'package:nolook/screens/widgets/file_add.dart';
 import 'package:nolook/screens/widgets/folder_add.dart';
 import 'package:nolook/screens/widgets/share.dart';
 
-class DirectoryList extends StatelessWidget {
+class DirectoryList extends StatefulWidget {
   const DirectoryList({super.key});
+
+  @override
+  _DirectoryListState createState() => _DirectoryListState();
+}
+
+class _DirectoryListState extends State<DirectoryList> {
+  bool _isSelectionMode = false;
+  final Set<int> _selectedFiles = {};
+
+  void _toggleSelectionMode() {
+    setState(() {
+      _isSelectionMode = !_isSelectionMode;
+      if (!_isSelectionMode) {
+        _selectedFiles.clear();
+      }
+    });
+  }
+
+  void _onCheckboxChanged(bool? value, int index) {
+    setState(() {
+      if (value == true) {
+        _selectedFiles.add(index);
+      } else {
+        _selectedFiles.remove(index);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,22 +42,29 @@ class DirectoryList extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           leading: const FolderAdd(),
-          actions: const [
+          actions: [
             Row(
               children: [
-                FileAdd(),
-                Share(),
-                Check(),
+                const FileAdd(),
+                const Share(),
+                IconButton(
+                  icon: const Icon(Icons.check),
+                  onPressed: _toggleSelectionMode,
+                ),
               ],
             ),
           ],
         ),
-        body: const Row(
-          children: [
-            File(),
-            File(),
-            File(),
-          ],
+        body: Row(
+          children: List.generate(
+            4, // 예제 파일 수
+            (index) => File(
+              isSelectionMode: _isSelectionMode,
+              index: index,
+              isSelected: _selectedFiles.contains(index),
+              onChanged: (value) => _onCheckboxChanged(value, index),
+            ),
+          ),
         ),
       ),
     );
