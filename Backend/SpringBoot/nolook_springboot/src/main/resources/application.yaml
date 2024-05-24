@@ -13,3 +13,8 @@ spring:
     username: root
     password: root1234!!
 
+jwt:
+  secret: your_jwt_secret_key
+  expiration-time: 86400000 # 1 day in milliseconds
+  token-prefix: Bearer
+  header-string: Authorization

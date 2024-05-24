@@ -22,7 +22,6 @@ public class UserService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     public UserDTO register(UserRequest userRequest) {
-
         var entity = UserEntity.builder()
                 .userName(userRequest.getUserName())
                 .email(userRequest.getEmail())
@@ -31,21 +30,17 @@ public class UserService {
                 .build();
 
         userRepository.save(entity);
-
         return userConverter.userToDTO(entity);
     }
 
     public UserDTO login(LoginRequest loginRequest) {
-
         log.info(loginRequest.toString());
 
         Optional<UserEntity> userOpt = userRepository.findByEmail(loginRequest.getEmail());
         if (userOpt.isPresent()) {
             UserEntity user = userOpt.get();
-            log.info("입력받은 비밀번호"+loginRequest.getPassword().toString());
-
-
-            log.info("데이터베이스에 있는 비밀번호"+user.getPassword().toString());
+            log.info("입력받은 비밀번호: " + loginRequest.getPassword());
+            log.info("데이터베이스에 있는 비밀번호: " + user.getPassword());
 
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
                 return userConverter.userToDTO(user);
@@ -53,7 +48,7 @@ public class UserService {
                 throw new IllegalArgumentException("Invalid password");
             }
         } else {
-            throw new IllegalArgumentException("Invalid email ");
+            throw new IllegalArgumentException("Invalid email");
         }
     }
 }

@@ -7,6 +7,7 @@ import org.hibernate.annotations.SQLRestriction;
 import org.nolook_springboot.directory.db.DirectoryEntity;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -27,9 +28,7 @@ public class UserEntity {
     private String email;
     private LocalDateTime createdAt;
 
-    @OneToMany(
-            mappedBy = "user"
-    )
-    @SQLRestriction("user_id = 'id'")   //@Where 어노테이션은 deprcated 되었다.
-    private List<DirectoryEntity> directoryList= List.of();
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<DirectoryEntity> directories = new ArrayList<>();
 }

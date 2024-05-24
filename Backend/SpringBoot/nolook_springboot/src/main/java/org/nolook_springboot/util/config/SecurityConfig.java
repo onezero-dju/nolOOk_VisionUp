@@ -1,4 +1,4 @@
-package org.nolook_springboot.config;
+package org.nolook_springboot.util.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // CSRF 보호 비활성화
                 .authorizeHttpRequests(authorizeRequests ->
                         authorizeRequests
-                                .requestMatchers("/api/user/register", "/api/user/login").permitAll()
+                                .requestMatchers("/api/user/register", "/api/user/login","/api/directory/save").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .formLogin(formLogin -> formLogin.disable());
