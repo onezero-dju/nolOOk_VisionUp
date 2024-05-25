@@ -75,16 +75,18 @@ class _SignupScreenState extends State<SignupScreen> {
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black, // 버튼 색상 설정
-                    padding: const EdgeInsets.symmetric(vertical: 16.0),
+                    padding: EdgeInsets.symmetric(
+                        vertical: MediaQuery.of(context).size.height * 0.018),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30.0),
+                      borderRadius: BorderRadius.circular(
+                          MediaQuery.of(context).size.height * 0.1),
                     ),
                   ),
-                  child: const Center(
+                  child: Center(
                     child: Text(
                       '회원가입',
                       style: TextStyle(
-                        fontSize: 16,
+                        fontSize: MediaQuery.of(context).size.height * 0.02,
                         color: Colors.white,
                       ),
                     ),
