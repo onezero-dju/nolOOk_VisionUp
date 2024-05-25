@@ -30,8 +30,8 @@ class File extends StatelessWidget {
         ),
         if (isSelectionMode)
           Positioned(
-            bottom: 20,
-            left: 25,
+            bottom: MediaQuery.of(context).size.height * 0.03,
+            left: MediaQuery.of(context).size.width * 0.06,
             child: Checkbox(
               fillColor: WidgetStateProperty.resolveWith((states) {
                 if (states.contains(WidgetState.selected)) {
