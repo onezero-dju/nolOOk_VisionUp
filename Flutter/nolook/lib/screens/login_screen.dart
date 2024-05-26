@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nolook/screens/memo_screen.dart';
 import 'package:nolook/screens/sign_up_screen.dart';
 import 'package:nolook/screens/widgets/custom_text_field.dart';
 
@@ -73,17 +74,19 @@ class _LoginScreenState extends State<LoginScreen> {
                       //   _passwordController.text,
                       // );
                       // if (success) {
-                      //   Navigator.push(
-                      //     context,
-                      //     MaterialPageRoute(
-                      //       builder: (context) => const MemoScreen(),
-                      //     ),
-                      //   );
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MemoScreen(),
+                        ),
+                      );
                       // } else {
                       //   ScaffoldMessenger.of(context).showSnackBar(
                       //     const SnackBar(content: Text('로그인 실패')),
                       //   );
                       // }
+                    } else {
+                      //_formKey.currentState?.validate() ?? false가 false일때
                     }
                   },
                   style: ElevatedButton.styleFrom(

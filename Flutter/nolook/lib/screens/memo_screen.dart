@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nolook/screens/widgets/Markdown.dart';
-import 'package:nolook/screens/widgets/check.dart';
 import 'package:nolook/screens/widgets/comment.dart';
 import 'package:nolook/screens/widgets/file_add.dart';
 import 'package:nolook/screens/widgets/file_delete_icon.dart';
