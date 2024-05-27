@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nolook/screens/directory_list.dart';
+import 'package:nolook/View/directory_list.dart';
 
 //FolderMove 아이콘에 대한 클래스
 class FolderMove extends StatelessWidget {
