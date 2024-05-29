@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:nolook/Controller/user_register.dart';
 import 'package:nolook/widgets/custom_text_field.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -12,32 +11,8 @@ class SignupScreen extends StatefulWidget {
 class _SignupScreenState extends State<SignupScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  final _userController = UserController();
-  void _register() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      try {
-        await _userController.register(
-          _emailController.text,
-          _passwordController.text,
-          _userNameController.text,
-        );
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Registration successful')),
-          );
-        }
-      } catch (error) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(error.toString())),
-          );
-        }
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,8 +52,8 @@ class _SignupScreenState extends State<SignupScreen> {
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.024),
                 CustomTextFormField(
-                  controller: _userNameController,
-                  labelText: '이름',
+                  controller: _idController,
+                  labelText: 'ID',
                   obscureText: true,
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.024),
@@ -95,7 +70,6 @@ class _SignupScreenState extends State<SignupScreen> {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(content: Text('회원가입 성공')),
                       );
-                      _register();
                       Navigator.pop(context);
                     }
                   },
