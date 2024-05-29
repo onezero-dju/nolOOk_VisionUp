@@ -74,6 +74,15 @@ class _SignupScreenState extends State<SignupScreen> {
                   controller: _emailController,
                   labelText: '이메일',
                   obscureText: false,
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return '이메일을 입력하세요';
+                    }
+                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                      return '올바른 이메일 주소를 입력하세요';
+                    }
+                    return null;
+                  },
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.024),
                 CustomTextFormField(
