@@ -27,24 +27,30 @@ class UserController {
     }
   }
 
-  Future<void> login(String email, String password) async {
+  Future<bool> login(String email, String password) async {
     final url = Uri.parse(
         'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/user/login');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({'email': email, 'password': password}),
+      body: jsonEncode({
+        'email': email,
+        'password': password,
+      }),
     );
+
+    print('Response status: ${response.statusCode}');
+    print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      if (responseData['success']) {
-        // 로그인 성공 처리
+      if (responseData != null && responseData['success'] != null) {
+        return responseData['success'];
       } else {
-        throw Exception(responseData['message']);
+        return false; // 응답에 success 필드가 없거나 null인 경우 false 반환
       }
     } else {
-      throw Exception('Failed to login');
+      throw Exception('Failed to login: ${response.reasonPhrase}');
     }
   }
 }

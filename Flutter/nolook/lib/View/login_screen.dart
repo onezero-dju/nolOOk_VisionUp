@@ -21,10 +21,12 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState?.validate() ?? false) {
       try {
         await _userController.login(
-            _emailController.text, _passwordController.text);
+          _emailController.text,
+          _passwordController.text,
+        );
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('login successful')),
+            const SnackBar(content: Text('Registration successful')),
           );
           Navigator.push(
             context,
@@ -95,6 +97,13 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 ElevatedButton(
                   onPressed: () async {
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const MemoScreen(),
+                    //   ),
+                    // );
+
                     _login();
                   },
                   style: ElevatedButton.styleFrom(
