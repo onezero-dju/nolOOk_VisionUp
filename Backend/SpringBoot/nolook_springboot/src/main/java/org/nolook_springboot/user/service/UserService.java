@@ -7,6 +7,8 @@ import org.nolook_springboot.user.db.UserRepository;
 import org.nolook_springboot.user.model.LoginRequest;
 import org.nolook_springboot.user.model.UserDTO;
 import org.nolook_springboot.user.model.UserRequest;
+import org.nolook_springboot.util.Jwt.JwtTokenProvider;
+import org.nolook_springboot.util.Jwt.TokenResponse;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final UserConverter userConverter;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public UserDTO register(UserRequest userRequest) {
         var entity = UserEntity.builder()
@@ -33,7 +36,7 @@ public class UserService {
         return userConverter.userToDTO(entity);
     }
 
-    public UserDTO login(LoginRequest loginRequest) {
+    public TokenResponse login(LoginRequest loginRequest) {
         log.info(loginRequest.toString());
 
         Optional<UserEntity> userOpt = userRepository.findByEmail(loginRequest.getEmail());
@@ -43,7 +46,8 @@ public class UserService {
             log.info("데이터베이스에 있는 비밀번호: " + user.getPassword());
 
             if (passwordEncoder.matches(loginRequest.getPassword(), user.getPassword())) {
-                return userConverter.userToDTO(user);
+                String jwtToken = jwtTokenProvider.createToken(user.getEmail());
+                return new TokenResponse(jwtToken);
             } else {
                 throw new IllegalArgumentException("Invalid password");
             }

@@ -7,10 +7,11 @@ import org.nolook_springboot.directory.db.DirectoryRepository;
 import org.nolook_springboot.directory.model.DirRequest;
 import org.nolook_springboot.directory.service.DirService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/directory")
@@ -24,19 +25,29 @@ public class DirApiController {
     @PostMapping("/save")
     public void DirSave(
             @RequestBody
-            DirRequest dirRequest
+            DirRequest dirRequest,
+
+            @AuthenticationPrincipal
+            UserDetails userDetails
+
     ){
-        dirService.DirSave(dirRequest);
+        dirService.DirSave(dirRequest,userDetails);
     }
 
     @PostMapping("/view")
     public void DirView(
             @RequestBody
-            DirRequest dirRequest
+            DirRequest dirRequest,
+            @AuthenticationPrincipal
+            UserDetails userDetails
     ){
-        dirService.DirSave(dirRequest);
+        dirService.DirSave(dirRequest,userDetails);
     }
 
-
-
+    @GetMapping("/list")
+    public List<DirectoryEntity> getDirectories(
+            @AuthenticationPrincipal UserDetails userDetails
+    ){
+        return dirService.getDirectories(userDetails);
+    }
 }
