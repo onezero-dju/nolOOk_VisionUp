@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:nolook/screens/memo_screen.dart';
 import 'package:nolook/screens/sign_up_screen.dart';
-import 'package:nolook/screens/widgets/custom_text_field.dart';
+import 'package:nolook/widgets/custom_text_field.dart';
 
 //로그인 화면이다
 class LoginScreen extends StatefulWidget {

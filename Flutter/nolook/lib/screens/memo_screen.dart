@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:nolook/screens/widgets/Markdown.dart';
-import 'package:nolook/screens/widgets/comment.dart';
-import 'package:nolook/screens/widgets/file_add.dart';
-import 'package:nolook/screens/widgets/file_delete_icon.dart';
-import 'package:nolook/screens/widgets/folder_add.dart';
-import 'package:nolook/screens/widgets/folder_move.dart';
-import 'package:nolook/screens/widgets/share.dart';
+import 'package:nolook/widgets/Markdown.dart';
+import 'package:nolook/widgets/comment.dart';
+import 'package:nolook/widgets/file_add.dart';
+import 'package:nolook/widgets/file_delete_icon.dart';
+import 'package:nolook/widgets/folder_add.dart';
+import 'package:nolook/widgets/folder_move.dart';
+import 'package:nolook/widgets/share.dart';
 
 class MemoScreen extends StatelessWidget {
   const MemoScreen({super.key});

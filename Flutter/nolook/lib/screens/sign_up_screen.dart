@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nolook/screens/widgets/custom_text_field.dart';
+import 'package:nolook/widgets/custom_text_field.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
