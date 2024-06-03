@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nolook/screens/login_screen.dart';
+import 'package:nolook/View/login_screen.dart';
 
 //앱의 시작점
 void main() {

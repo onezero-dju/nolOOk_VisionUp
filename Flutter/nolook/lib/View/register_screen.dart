@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:nolook/widgets/custom_text_field.dart';
 
-class SignupScreen extends StatefulWidget {
-  const SignupScreen({super.key});
+//회원가입 화면이다.
+class RegisterScreen extends StatefulWidget {
+  const RegisterScreen({super.key});
 
   @override
-  _SignupScreenState createState() => _SignupScreenState();
+  _RegisterScreenState createState() => _RegisterScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _idController = TextEditingController();

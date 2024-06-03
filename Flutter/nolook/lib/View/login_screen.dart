@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:nolook/screens/memo_screen.dart';
-import 'package:nolook/screens/sign_up_screen.dart';
+import 'package:nolook/Controller/user_register.dart';
+import 'package:nolook/View/memo_screen.dart';
+import 'package:nolook/View/register_screen.dart';
 import 'package:nolook/widgets/custom_text_field.dart';
 
 //로그인 화면이다
@@ -15,6 +16,34 @@ class _LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final _userController = UserController();
+  void _login() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      try {
+        await _userController.login(
+          _emailController.text,
+          _passwordController.text,
+        );
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registration successful')),
+          );
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => const MemoScreen(),
+            ),
+          );
+        }
+      } catch (error) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(error.toString())),
+          );
+        }
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,26 +97,14 @@ class _LoginScreenState extends State<LoginScreen> {
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 ElevatedButton(
                   onPressed: () async {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      // bool success = await _authService.login(
-                      //   _emailController.text,
-                      //   _passwordController.text,
-                      // );
-                      // if (success) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const MemoScreen(),
-                        ),
-                      );
-                      // } else {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     const SnackBar(content: Text('로그인 실패')),
-                      //   );
-                      // }
-                    } else {
-                      //_formKey.currentState?.validate() ?? false가 false일때
-                    }
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //     builder: (context) => const MemoScreen(),
+                    //   ),
+                    // );
+
+                    _login();
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey, // 버튼 색상 설정
@@ -117,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const SignupScreen(),
+                        builder: (context) => const RegisterScreen(),
                       ),
                     );
                   },
