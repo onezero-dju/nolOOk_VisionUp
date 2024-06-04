@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nolook/Controller/user_register.dart';
+import 'package:nolook/Controller/user_controller.dart';
 import 'package:nolook/View/memo_screen.dart';
 import 'package:nolook/View/register_screen.dart';
 import 'package:nolook/widgets/custom_text_field.dart';

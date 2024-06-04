@@ -3,12 +3,12 @@ import 'package:http/http.dart' as http;
 
 Future<void> saveToken(String token) async {
   final prefs = await SharedPreferences.getInstance();
-  await prefs.setString('jwt_token', token);
+  await prefs.setString('jwtToken', token);
 }
 
 Future<String?> getToken() async {
   final prefs = await SharedPreferences.getInstance();
-  return prefs.getString('jwt_token');
+  return prefs.getString('jwtToken');
 }
 
 Future<void> sendRequest() async {

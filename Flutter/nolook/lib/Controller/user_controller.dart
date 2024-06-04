@@ -1,6 +1,8 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:nolook/Controller/token.dart';
+
 class UserController {
   Future<void> register(String email, String password, String userName) async {
     //유저 등록
@@ -29,7 +31,6 @@ class UserController {
   }
 
   Future<bool> login(String email, String password) async {
-    //유저 로그인
     final url = Uri.parse(
         'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/user/login');
     final response = await http.post(
@@ -42,15 +43,29 @@ class UserController {
     );
 
     print('Response status: ${response.statusCode}');
-    print(response.body);
-    //saveToken 메서드에 매개변수 값으로 response.body를 넣어준다 (토큰 값만 가져온다)
+    print('Response body: ${response.body}');
 
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
-      if (responseData != null && responseData['success'] != null) {
-        return responseData['success'];
+
+      // 서버 응답 전체를 출력하여 확인
+      print('Response data: $responseData');
+
+      // 응답 데이터에서 success 필드가 없을 경우를 대비한 처리
+      if (responseData != null) {
+        if (responseData.containsKey('jwtToken')) {
+          String token = responseData['jwtToken'];
+
+          await saveToken(token);
+          print('Token received: $token');
+          return true;
+        } else {
+          print('JWT token is missing in the response');
+          return false;
+        }
       } else {
-        return false; // 응답에 success 필드가 없거나 null인 경우 false 반환
+        print('Response data is null');
+        return false;
       }
     } else {
       throw Exception('Failed to login: ${response.reasonPhrase}');
