@@ -57,7 +57,7 @@ class UserController {
           String token = responseData['jwtToken'];
 
           await saveToken(token);
-          print('Token received: $token');
+          print(token);
           return true;
         } else {
           print('JWT token is missing in the response');

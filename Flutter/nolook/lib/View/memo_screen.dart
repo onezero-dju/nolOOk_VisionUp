@@ -16,34 +16,56 @@ class MemoScreen extends StatefulWidget {
 }
 
 class _MemoScreenState extends State<MemoScreen> {
+  TextEditingController? _controller;
   final DirectoryController _directoryController = DirectoryController();
+  // 컨트롤러 접근
   List<String> dirList = [];
-
   @override
   void initState() {
     super.initState();
     fetchDirList();
   }
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // MarkdownEditor 위젯이 빌드된 후에 컨트롤러에 접근
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final MarkdownEditor? markdownEditor =
+          context.findAncestorWidgetOfExactType<MarkdownEditor>();
+      setState(() {
+        _controller = markdownEditor?.getController(context);
+      });
+    });
+  }
+
   Future<void> fetchDirList() async {
     try {
       final fetchedDirList = await _directoryController.fetchDirList();
-      setState(() {
-        dirList = fetchedDirList;
-      });
+
+      if (mounted) {
+        setState(() {
+          dirList = fetchedDirList;
+        });
+      }
     } catch (error) {
       print('Error fetching directory list: $error');
     }
   }
 
-  Future<void> createFile() async {
+  Future<void> saveDirectory() async {
     try {
-      await _directoryController.createFile('new_file.txt');
-      await fetchDirList(); // 파일 생성 후 dirList 업데이트
+      await _directoryController.saveDirectory(
+          _controller!.text); //markdown.dart 파일에 있는 controller 사용
+      if (mounted) {
+        await fetchDirList(); // 디렉토리 생성 후 dirList 업데이트
+      }
     } catch (error) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Failed to create file: $error')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create directory: $error')),
+        );
+      }
     }
   }
 
@@ -84,7 +106,7 @@ class _MemoScreenState extends State<MemoScreen> {
                     const MarkdownEditor(),
                     const Comment(),
                     ElevatedButton(
-                      onPressed: createFile,
+                      onPressed: saveDirectory,
                       child: const Text('저장'),
                     ),
                     ListView.builder(
