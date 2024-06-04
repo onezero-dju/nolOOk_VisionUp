@@ -16,10 +16,12 @@ class MemoScreen extends StatefulWidget {
 }
 
 class _MemoScreenState extends State<MemoScreen> {
-  TextEditingController? _controller;
+  late final TextEditingController _controller;
+
   final DirectoryController _directoryController = DirectoryController();
   // 컨트롤러 접근
   List<String> dirList = [];
+
   @override
   void initState() {
     super.initState();
@@ -30,13 +32,7 @@ class _MemoScreenState extends State<MemoScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     // MarkdownEditor 위젯이 빌드된 후에 컨트롤러에 접근
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final MarkdownEditor? markdownEditor =
-          context.findAncestorWidgetOfExactType<MarkdownEditor>();
-      setState(() {
-        _controller = markdownEditor?.getController(context);
-      });
-    });
+    _controller = const MarkdownEditor().getController(context)!;
   }
 
   Future<void> fetchDirList() async {
@@ -55,16 +51,14 @@ class _MemoScreenState extends State<MemoScreen> {
 
   Future<void> saveDirectory() async {
     try {
-      await _directoryController.saveDirectory(
-          _controller!.text); //markdown.dart 파일에 있는 controller 사용
-      if (mounted) {
-        await fetchDirList(); // 디렉토리 생성 후 dirList 업데이트
-      }
+      //markdown.dart 파일에 있는 controller 사용
+      await _directoryController.createDirectory(_controller.text);
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to create directory: $error')),
         );
+        print(error);
       }
     }
   }

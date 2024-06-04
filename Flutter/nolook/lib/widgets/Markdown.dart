@@ -3,35 +3,30 @@ import 'package:provider/provider.dart';
 import 'package:nolook/Model/MarkdownEditor.dart';
 
 class MarkdownEditor extends StatefulWidget {
-  const MarkdownEditor({
-    super.key,
-  });
+  const MarkdownEditor({super.key});
 
   @override
   _MarkdownEditorState createState() => _MarkdownEditorState();
 
   // controller에 접근할 수 있는 getter 메서드
   TextEditingController? getController(BuildContext context) {
-    final _MarkdownEditorState? state =
-        context.findAncestorStateOfType<_MarkdownEditorState>();
-    return state?._controller;
+    final model = context.read<MarkdownEditorModel>();
+    return model.controller;
   }
 }
 
 class _MarkdownEditorState extends State<MarkdownEditor> {
   late MarkdownEditorModel _model; // 모델 인스턴스
-  late TextEditingController _controller; // 컨트롤러 선언
 
   @override
   void initState() {
     super.initState();
     _model = MarkdownEditorModel(); // 모델 초기화
-    _controller = TextEditingController(); // 컨트롤러 초기화
   }
 
   @override
   void dispose() {
-    _controller.dispose(); // 컨트롤러 dispose
+    _model.dispose(); // 모델 dispose
     super.dispose();
   }
 
@@ -45,7 +40,7 @@ class _MarkdownEditorState extends State<MarkdownEditor> {
             height: MediaQuery.of(context).size.height * 0.9,
             child: Consumer<MarkdownEditorModel>(
               builder: (context, model, _) => TextField(
-                controller: _controller, // 컨트롤러 사용
+                controller: model.controller, // 컨트롤러 사용
                 maxLines: null,
                 decoration: const InputDecoration(
                   hintText: '메모를 입력하세요',

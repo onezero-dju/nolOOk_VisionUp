@@ -35,23 +35,53 @@ class DirectoryController {
     }
   }
 
-  Future<void> saveDirectory(String directoryName) async {
+  Future<void> createDirectory(String directoryName) async {
     final url = Uri.parse(
         'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/directory/list'); // 파일 생성 API 엔드포인트
     final token = await getToken(); // 토큰을 비동기로 가져옴
+
+    print(token);
+
     final response = await http.post(
       url,
       headers: {
         'Content-Type': 'application/json',
-        // 필요한 경우 인증 헤더 추가
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode({
-        'directory_name': directoryName,
+        "directory_name": directoryName,
       }),
     );
     print(response.statusCode);
     print(response.reasonPhrase);
+    print('resopnse body: ${response.body}');
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to create file: ${response.reasonPhrase}');
+    }
+  }
+
+  Future<void> viewDirectory(String directoryId) async {
+    final url = Uri.parse(
+        'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/directory/view'); // 파일 생성 API 엔드포인트
+    final token = await getToken(); // 토큰을 비동기로 가져옴
+
+    print(token);
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        "directory_id": directoryId,
+      }),
+    );
+    print(response.statusCode);
+    print(response.reasonPhrase);
+    print('resopnse body: ${response.body}');
+
     if (response.statusCode != 200) {
       throw Exception('Failed to create file: ${response.reasonPhrase}');
     }
