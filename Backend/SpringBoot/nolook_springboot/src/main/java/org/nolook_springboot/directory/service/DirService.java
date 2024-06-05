@@ -7,10 +7,10 @@ import org.nolook_springboot.directory.db.DirectoryRepository;
 import org.nolook_springboot.directory.model.*;
 import org.nolook_springboot.memo.db.MemoEntity;
 import org.nolook_springboot.memo.db.MemoRepository;
-import org.nolook_springboot.memo.model.MemoViewDTO;
 import org.nolook_springboot.memo.service.MemoDirViewConverter;
 import org.nolook_springboot.user.db.UserEntity;
 import org.nolook_springboot.user.db.UserRepository;
+import org.nolook_springboot.util.exception.UnauthorizedAccessException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -47,15 +47,19 @@ public class DirService {
         UserEntity user = userRepository.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user email"));
 
+
+
+
+
         List<DirectoryEntity> directories = directoryRepository.findAllByUser(user);
         return directories.stream()
                 .map(dirConverter::directoryConverter)
                 .collect(Collectors.toList());
     }
 
-    public List<DirMemoViewDTO> getMemoList(DirViewRequest dirViewRequest, UserDetails userDetails) {
+    public List<DirMemoViewDTO> getMemoList(DirIdRequest dirIdRequest, UserDetails userDetails) {
 
-        if (dirViewRequest.getDirectoryId() == null) {
+        if (dirIdRequest.getDirectoryId() == null) {
             throw new IllegalArgumentException("Directory ID must not be null");
         }
 
@@ -64,7 +68,7 @@ public class DirService {
 
 
 
-        DirectoryEntity directoryEntity=directoryRepository.findById(dirViewRequest.getDirectoryId())
+        DirectoryEntity directoryEntity=directoryRepository.findById(dirIdRequest.getDirectoryId())
                 .orElseThrow(() -> new IllegalArgumentException("Invalid Directory ID"));
 
         List<MemoEntity> memoEntities = memoRepository.findAllByDirectory(directoryEntity);
@@ -85,8 +89,31 @@ public class DirService {
                 .orElseThrow(()->new IllegalArgumentException("Invalid directory id"));
 
 
+        if (!directoryEntity.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedAccessException("User does not have permission to change this directory name.");
+        }
+
+        directoryEntity.setDirectoryName(dirNameChangeRequest.getDirectoryName());
+        directoryEntity.setUpdatedAt(LocalDateTime.now());
+        directoryRepository.save(directoryEntity);
 
 
+    }
+
+    public void DirectoryDelete(DirIdRequest dirIdRequest, UserDetails userDetails) {
+        UserEntity user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user email"));
+
+
+        DirectoryEntity directoryEntity = directoryRepository.findById(dirIdRequest.getDirectoryId())
+                .orElseThrow(()->new IllegalArgumentException("Invalid directory id"));
+
+
+        if (!directoryEntity.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedAccessException("User does not have permission to change this directory name.");
+        }
+
+        directoryRepository.deleteById(dirIdRequest.getDirectoryId());
 
 
     }

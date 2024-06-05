@@ -12,7 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @JsonNaming(value = PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class DirViewRequest {
+public class DirIdRequest {
 
 
 

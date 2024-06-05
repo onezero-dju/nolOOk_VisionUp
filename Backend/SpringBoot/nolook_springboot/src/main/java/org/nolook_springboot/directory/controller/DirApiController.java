@@ -2,14 +2,12 @@ package org.nolook_springboot.directory.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.nolook_springboot.directory.db.DirectoryEntity;
-import org.nolook_springboot.directory.db.DirectoryRepository;
 import org.nolook_springboot.directory.model.*;
 import org.nolook_springboot.directory.service.DirService;
-import org.nolook_springboot.memo.model.MemoViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +24,7 @@ public class DirApiController {
     @PostMapping("/save")
     public void DirSave(
             @RequestBody
+            @Validated
             DirRequest dirRequest,
 
             @AuthenticationPrincipal
@@ -47,18 +46,20 @@ public class DirApiController {
     public List<DirMemoViewDTO> DirView(
 
             @RequestBody
-            DirViewRequest dirViewRequest,
+            @Validated
+            DirIdRequest dirIdRequest,
 
             @AuthenticationPrincipal UserDetails userDetails
     ){
         log.info("여기");
-        return dirService.getMemoList(dirViewRequest,userDetails);
+        return dirService.getMemoList(dirIdRequest,userDetails);
     }
 
     @PostMapping("/nameChange")
     public void DirNameChange(
 
             @RequestBody
+            @Validated
             DirNameChangeRequest dirNameChangeRequest,
 
             @AuthenticationPrincipal UserDetails userDetails
@@ -67,7 +68,19 @@ public class DirApiController {
         dirService.dirNameChange(dirNameChangeRequest, userDetails);
 
     }
+    @PostMapping("/delete")
+    public void DirDelete(
 
+            @RequestBody
+            @Validated
+            DirIdRequest dirIdRequest,
+
+            @AuthenticationPrincipal UserDetails userDetails
+    ){
+
+        dirService.DirectoryDelete(dirIdRequest, userDetails);
+
+    }
 
 
 }

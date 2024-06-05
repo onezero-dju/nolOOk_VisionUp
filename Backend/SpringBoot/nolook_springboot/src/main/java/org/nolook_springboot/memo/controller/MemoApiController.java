@@ -10,6 +10,7 @@ import org.nolook_springboot.memo.model.MemoViewRequest;
 import org.nolook_springboot.memo.service.MemoService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -25,6 +26,7 @@ public class MemoApiController {
     @PostMapping("/save")
     public void SaveMemo (
             @RequestBody
+            @Validated
             MemoSaveRequest memoSaveRequest,
             @AuthenticationPrincipal
             UserDetails userDetails
@@ -41,6 +43,7 @@ public class MemoApiController {
 
     @PostMapping("/view")
     public MemoViewDTO ViewMemo (
+            @Validated
             @RequestBody
             MemoViewRequest memoViewRequest,
             @AuthenticationPrincipal
