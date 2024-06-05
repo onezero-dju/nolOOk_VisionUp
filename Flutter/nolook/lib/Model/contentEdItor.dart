@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class MarkdownEditorModel extends ChangeNotifier {
+class ContentEditorModel extends ChangeNotifier {
   final TextEditingController _controller = TextEditingController();
 
   TextEditingController get controller => _controller;

@@ -64,7 +64,7 @@ class _DirectoryListState extends State<DirectoryList> {
               ),
               body: Row(
                 children: List.generate(
-                  dirList.length, // dir_list의 길이만큼 생성
+                  2, // dirList.length, // dir_list의 길이만큼 생성
                   (index) => ElevatedButton(
                     onPressed: () async {
                       // await _directoryController.viewDirectory();  파일에 해당하는 id값

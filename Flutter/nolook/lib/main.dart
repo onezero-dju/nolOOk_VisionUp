@@ -1,9 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:nolook/View/login_screen.dart';
+import 'package:nolook/Model/contentEdItor.dart';
+import 'package:nolook/Model/titleEditor.dart';
 
-//앱의 시작점
+import 'package:provider/provider.dart';
+import 'package:nolook/view/login_screen.dart';
+
 void main() {
-  runApp(const nolOOk());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => ContentEditorModel()),
+        ChangeNotifierProvider(create: (_) => TitleEditorModel()), // 새로 추가
+      ],
+      child: const nolOOk(),
+    ),
+  );
 }
 
 class nolOOk extends StatelessWidget {

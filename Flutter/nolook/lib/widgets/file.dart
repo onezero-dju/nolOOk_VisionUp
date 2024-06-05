@@ -20,18 +20,21 @@ class File extends StatelessWidget {
     return Stack(
       alignment: Alignment.center,
       children: [
-        Row(
-          children: [
-            IconButton(
-              onPressed: () {},
-              icon: Icon(
-                Icons.folder,
-                size: MediaQuery.of(context).size.width * 0.2,
-                color: Colors.blue,
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.15,
+          child: Column(
+            children: [
+              IconButton(
+                onPressed: () {},
+                icon: Icon(
+                  Icons.folder,
+                  size: MediaQuery.of(context).size.width * 0.2,
+                  color: Colors.blue,
+                ),
               ),
-            ),
-            const Text('')
-          ],
+              const Text('fcf'),
+            ],
+          ),
         ),
         if (isSelectionMode)
           Positioned(

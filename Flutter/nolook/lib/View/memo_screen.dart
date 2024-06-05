@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nolook/Controller/directory_controller.dart';
-import 'package:nolook/widgets/Markdown.dart';
+import 'package:nolook/Model/titleEditor.dart';
+import 'package:nolook/widgets/title.dart';
+import 'package:provider/provider.dart';
+
+import 'package:nolook/widgets/content.dart';
 import 'package:nolook/widgets/comment.dart';
 import 'package:nolook/widgets/file_add.dart';
 import 'package:nolook/widgets/file_delete_icon.dart';
@@ -16,10 +20,9 @@ class MemoScreen extends StatefulWidget {
 }
 
 class _MemoScreenState extends State<MemoScreen> {
-  late final TextEditingController _controller;
-
+  late final TextEditingController _titlecontroller;
+  late final TextEditingController _contentcontroller;
   final DirectoryController _directoryController = DirectoryController();
-  // 컨트롤러 접근
   List<String> dirList = [];
 
   @override
@@ -31,14 +34,13 @@ class _MemoScreenState extends State<MemoScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // MarkdownEditor 위젯이 빌드된 후에 컨트롤러에 접근
-    _controller = const MarkdownEditor().getController(context)!;
+    _titlecontroller = const TitleEditor().getController(context)!;
+    _contentcontroller = const Content().getController(context)!;
   }
 
   Future<void> fetchDirList() async {
     try {
       final fetchedDirList = await _directoryController.fetchDirList();
-
       if (mounted) {
         setState(() {
           dirList = fetchedDirList;
@@ -51,73 +53,103 @@ class _MemoScreenState extends State<MemoScreen> {
 
   Future<void> saveDirectory() async {
     try {
-      //markdown.dart 파일에 있는 controller 사용
-      await _directoryController.createDirectory(_controller.text);
+      print('Trying to save directory with title: ${_titlecontroller.text}');
+      await _directoryController.createDirectory(_contentcontroller.text);
+      if (mounted) {
+        await fetchDirList(); // 디렉토리 생성 후 dirList 업데이트
+      }
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Failed to create directory: $error')),
         );
-        print(error);
       }
+      print('Error: $error');
+    }
+  }
+
+  Future<void> saveMemo() async {
+    try {
+      print(
+          'Trying to save memo with title: ${_titlecontroller.text} and content: ${_contentcontroller.text}');
+      // await _directoryController.saveMemo(,_titlecontroller.text,_contentcontroller.text); //디렉터리 id 넣어야 함
+      if (mounted) {
+        await fetchDirList(); // 디렉토리 생성 후 dirList 업데이트
+      }
+    } catch (error) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to create memo: $error')),
+        );
+      }
+      print('Error: $error');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        appBar: AppBar(
-          leadingWidth: 200,
-          leading: const Row(
-            children: [
-              FolderMove(),
-              FolderAdd(),
-            ],
-          ),
-          actions: const [
-            Row(
+    return ChangeNotifierProvider(
+      create: (_) => TitleEditorModel(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: Scaffold(
+          appBar: AppBar(
+            leadingWidth: 200,
+            leading: const Row(
               children: [
-                FileAdd(),
-                Share(),
-                FileDeleteIcon(),
+                FolderMove(),
+                FolderAdd(),
               ],
             ),
-          ],
-        ),
-        body: Column(
-          children: [
-            const Divider(
-              height: 1,
-              thickness: 1,
-              color: Colors.black, // 검정색 선
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    const MarkdownEditor(),
-                    const Comment(),
-                    ElevatedButton(
-                      onPressed: saveDirectory,
-                      child: const Text('저장'),
-                    ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: dirList.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text('File: ${dirList[index]}'),
-                        );
-                      },
-                    ),
-                  ],
+            actions: const [
+              Row(
+                children: [
+                  FileAdd(),
+                  Share(),
+                  FileDeleteIcon(),
+                ],
+              ),
+            ],
+          ),
+          body: Column(
+            children: [
+              const Divider(
+                height: 1,
+                thickness: 1,
+                color: Colors.black,
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      const TitleEditor(),
+                      const Divider(
+                        height: 1,
+                        thickness: 1,
+                        color: Colors.black,
+                      ),
+                      const Content(),
+                      const Comment(),
+                      ElevatedButton(
+                        onPressed: saveDirectory,
+                        child: const Text('저장'),
+                      ),
+                      ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: dirList.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text('File: ${dirList[index]}'),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
