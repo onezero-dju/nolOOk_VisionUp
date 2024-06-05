@@ -29,7 +29,7 @@ public class UserConverter {
     private DirectoryDTO convertDirectoryEntityToDTO(DirectoryEntity directoryEntity) {
         return DirectoryDTO.builder()
                 .id(directoryEntity.getId())
-                .name(directoryEntity.getDirectoryName())
+                .directoryName(directoryEntity.getDirectoryName())
                 .build();
     }
 }

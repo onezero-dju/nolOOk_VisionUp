@@ -11,4 +11,5 @@ import java.util.List;
 public interface DirectoryRepository extends JpaRepository<DirectoryEntity,Long> {
     List<DirectoryEntity> findAllByUser(UserEntity user);
 
+
 }

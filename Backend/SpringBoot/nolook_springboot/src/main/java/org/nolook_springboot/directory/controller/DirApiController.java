@@ -4,8 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.nolook_springboot.directory.db.DirectoryEntity;
 import org.nolook_springboot.directory.db.DirectoryRepository;
-import org.nolook_springboot.directory.model.DirRequest;
+import org.nolook_springboot.directory.model.*;
 import org.nolook_springboot.directory.service.DirService;
+import org.nolook_springboot.memo.model.MemoViewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,20 +35,39 @@ public class DirApiController {
         dirService.DirSave(dirRequest,userDetails);
     }
 
-    @PostMapping("/view")
-    public void DirView(
-            @RequestBody
-            DirRequest dirRequest,
-            @AuthenticationPrincipal
-            UserDetails userDetails
-    ){
-        dirService.DirSave(dirRequest,userDetails);
-    }
 
     @GetMapping("/list")
-    public List<DirectoryEntity> getDirectories(
+    public List<DirectoryDTO> getDirectories(
             @AuthenticationPrincipal UserDetails userDetails
     ){
         return dirService.getDirectories(userDetails);
     }
+
+    @PostMapping("/view")
+    public List<DirMemoViewDTO> DirView(
+
+            @RequestBody
+            DirViewRequest dirViewRequest,
+
+            @AuthenticationPrincipal UserDetails userDetails
+    ){
+        log.info("여기");
+        return dirService.getMemoList(dirViewRequest,userDetails);
+    }
+
+    @PostMapping("/nameChange")
+    public void DirNameChange(
+
+            @RequestBody
+            DirNameChangeRequest dirNameChangeRequest,
+
+            @AuthenticationPrincipal UserDetails userDetails
+    ){
+
+        dirService.dirNameChange(dirNameChangeRequest, userDetails);
+
+    }
+
+
+
 }

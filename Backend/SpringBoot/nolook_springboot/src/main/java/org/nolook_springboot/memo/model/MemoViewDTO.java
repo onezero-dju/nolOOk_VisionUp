@@ -11,13 +11,18 @@ import java.time.LocalDateTime;
 @Builder
 public class MemoViewDTO {
 
-    private String content;
+    @NonNull
+    public Long directoryId;
+    @NonNull
+    public String memoName;
+    @NonNull
+    public String content;
 
-    private String memoName;
+    @NonNull
+    public LocalDateTime createdAt;
+    @NonNull
+    public LocalDateTime updatedAt;
 
-    private LocalDateTime createdAt;
-
-    private LocalDateTime updatedAt;
 
 
 }

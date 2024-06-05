@@ -7,9 +7,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class DirConverter {
 
-    public DirectoryDTO directoryDTO(DirectoryEntity directoryEntity){
+    public DirectoryDTO directoryConverter(DirectoryEntity directoryEntity){
 
-        return DirectoryDTO.builder().build();
+        return DirectoryDTO
+                .builder()
+                .directoryName(directoryEntity.getDirectoryName())
+                .id(directoryEntity.getId())
+                .build();
 
     }
 
