@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:nolook/Controller/directory_controller.dart';
+import 'package:nolook/Model/contentEdItor.dart';
 import 'package:nolook/Model/titleEditor.dart';
-import 'package:nolook/widgets/title.dart';
+import 'package:nolook/View/directory_list.dart';
+import 'package:nolook/providers/selected_directory_provider.dart';
 import 'package:provider/provider.dart';
-
 import 'package:nolook/widgets/content.dart';
 import 'package:nolook/widgets/comment.dart';
 import 'package:nolook/widgets/file_add.dart';
@@ -11,6 +12,7 @@ import 'package:nolook/widgets/file_delete_icon.dart';
 import 'package:nolook/widgets/folder_add.dart';
 import 'package:nolook/widgets/folder_move.dart';
 import 'package:nolook/widgets/share.dart';
+import 'package:nolook/widgets/title.dart';
 
 class MemoScreen extends StatefulWidget {
   const MemoScreen({super.key});
@@ -20,10 +22,10 @@ class MemoScreen extends StatefulWidget {
 }
 
 class _MemoScreenState extends State<MemoScreen> {
-  late final TextEditingController _titlecontroller;
-  late final TextEditingController _contentcontroller;
+  late TextEditingController _titlecontroller;
+  late TextEditingController _contentcontroller;
   final DirectoryController _directoryController = DirectoryController();
-  List<String> dirList = [];
+  List<dynamic> dirList = [];
 
   @override
   void initState() {
@@ -34,18 +36,26 @@ class _MemoScreenState extends State<MemoScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _titlecontroller = const TitleEditor().getController(context)!;
-    _contentcontroller = const Content().getController(context)!;
+    _titlecontroller =
+        Provider.of<TitleEditorModel>(context, listen: false).controller;
+    _contentcontroller =
+        Provider.of<ContentEditorModel>(context, listen: false).controller;
   }
 
   Future<void> fetchDirList() async {
     try {
       final fetchedDirList = await _directoryController.fetchDirList();
-      if (mounted) {
-        setState(() {
-          dirList = fetchedDirList;
-        });
+      setState(() {
+        dirList = List<Map<String, dynamic>>.from(fetchedDirList);
+      });
+
+      if (dirList.isNotEmpty) {
+        final selectedDirectoryProvider =
+            Provider.of<SelectedDirectoryProvider>(context, listen: false);
+        selectedDirectoryProvider.setSelectedDirectoryId(dirList[1]['id']);
       }
+
+      print("dirlist: $dirList");
     } catch (error) {
       print('Error fetching directory list: $error');
     }
@@ -54,7 +64,7 @@ class _MemoScreenState extends State<MemoScreen> {
   Future<void> saveDirectory() async {
     try {
       print('Trying to save directory with title: ${_titlecontroller.text}');
-      await _directoryController.createDirectory(_contentcontroller.text);
+      await _directoryController.createDirectory(_titlecontroller.text);
       if (mounted) {
         await fetchDirList(); // 디렉토리 생성 후 dirList 업데이트
       }
@@ -69,10 +79,14 @@ class _MemoScreenState extends State<MemoScreen> {
   }
 
   Future<void> saveMemo() async {
+    final selectedDirectoryId =
+        Provider.of<SelectedDirectoryProvider>(context, listen: false)
+            .selectedDirectoryId;
     try {
       print(
-          'Trying to save memo with title: ${_titlecontroller.text} and content: ${_contentcontroller.text}');
-      // await _directoryController.saveMemo(,_titlecontroller.text,_contentcontroller.text); //디렉터리 id 넣어야 함
+          'Trying to save memo with title: ${_titlecontroller.text} and content: ${_contentcontroller.text} and id is $selectedDirectoryId');
+      await _directoryController.saveMemo(selectedDirectoryId!,
+          _titlecontroller.text, _contentcontroller.text); // 디렉터리 id 넣어야 함
       if (mounted) {
         await fetchDirList(); // 디렉토리 생성 후 dirList 업데이트
       }
@@ -88,69 +102,86 @@ class _MemoScreenState extends State<MemoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => TitleEditorModel(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
-          appBar: AppBar(
-            leadingWidth: 200,
-            leading: const Row(
-              children: [
-                FolderMove(),
-                FolderAdd(),
-              ],
-            ),
-            actions: const [
-              Row(
-                children: [
-                  FileAdd(),
-                  Share(),
-                  FileDeleteIcon(),
-                ],
-              ),
+    return Scaffold(
+      appBar: AppBar(
+        leadingWidth: 200,
+        leading: const Row(
+          children: [
+            FolderMove(),
+            FolderAdd(),
+          ],
+        ),
+        actions: [
+          Row(
+            children: [
+              const FileAdd(),
+              const Share(),
+              FileDeleteIcon(),
             ],
           ),
-          body: Column(
-            children: [
-              const Divider(
-                height: 1,
-                thickness: 1,
-                color: Colors.black,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
+        ],
+      ),
+      body: Column(
+        children: [
+          const Divider(
+            height: 1,
+            thickness: 1,
+            color: Colors.black,
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  const TitleEditor(),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Colors.black,
+                  ),
+                  const Content(),
+                  const Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: Colors.black,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const TitleEditor(),
-                      const Divider(
-                        height: 1,
-                        thickness: 1,
-                        color: Colors.black,
-                      ),
-                      const Content(),
-                      const Comment(),
-                      ElevatedButton(
-                        onPressed: saveDirectory,
-                        child: const Text('저장'),
-                      ),
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: dirList.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text('File: ${dirList[index]}'),
+                      OutlinedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const DirectoryList(),
+                            ),
                           );
                         },
+                        child: const Text(
+                          '취소',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.04,
+                      ),
+                      OutlinedButton(
+                        onPressed: saveMemo,
+                        child: const Text(
+                          '저장',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
+        ],
       ),
     );
   }

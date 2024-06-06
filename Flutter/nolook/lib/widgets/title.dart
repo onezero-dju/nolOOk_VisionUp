@@ -23,17 +23,19 @@ class _TitleEditorState extends State<TitleEditor> {
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.05,
           child: Consumer<TitleEditorModel>(
-            builder: (context, model, _) => TextField(
-              controller: model.controller,
-              decoration: const InputDecoration(
-                hintText: '제목을 입력하세요',
-                border: InputBorder.none,
+            builder: (context, model, _) => GestureDetector(
+              child: TextField(
+                controller: model.controller,
+                decoration: const InputDecoration(
+                  hintText: '제목을 입력하세요',
+                  border: InputBorder.none,
+                ),
+                style: const TextStyle(color: Colors.black),
+                cursorColor: Colors.black,
+                onChanged: (text) {
+                  model.text = text;
+                },
               ),
-              style: const TextStyle(color: Colors.black),
-              cursorColor: Colors.black,
-              onChanged: (text) {
-                model.text = text;
-              },
             ),
           ),
         ),

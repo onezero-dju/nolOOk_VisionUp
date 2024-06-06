@@ -1,11 +1,14 @@
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:nolook/Controller/token.dart';
 
-class DirectoryController {
-  Future<List<String>> fetchDirList() async {
-    //전체 디렉터리 열람
+class DirectoryController with ChangeNotifier {
+  final List<Map<String, dynamic>> _dirList = [];
+
+  List<Map<String, dynamic>> get dirList => _dirList;
+  Future<List<Map<String, dynamic>>> fetchDirList() async {
     final url = Uri.parse(
         'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/directory/list'); // API 엔드포인트 변경
     final token = await getToken(); // 토큰을 비동기로 가져옴
@@ -18,14 +21,12 @@ class DirectoryController {
       },
     );
 
-    print('Response status: ${response.statusCode}');
-    print('Response body: ${response.body}');
-
     if (response.statusCode == 200) {
       final responseData = json.decode(response.body);
       if (responseData is List) {
-        List<String> dirList = responseData
-            .map<String>((item) => item['directoryName'].toString())
+        List<Map<String, dynamic>> dirList = responseData
+            .map<Map<String, dynamic>>((item) =>
+                {'id': item['id'], 'directoryName': item['directoryName']})
             .toList();
         return dirList;
       } else {
@@ -38,7 +39,7 @@ class DirectoryController {
 
   Future<void> createDirectory(String directoryName) async {
     final url = Uri.parse(
-        'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/directory/list'); // 파일 생성 API 엔드포인트
+        'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/directory/save'); // 파일 생성 API 엔드포인트
 
     final token = await getToken(); // 토큰을 비동기로 가져옴
 
@@ -70,13 +71,14 @@ class DirectoryController {
     }
   }
 
-  Future<void> viewDirectory(String directoryId) async {
-    //디렉터리 열람 (메모들 열람)
+  Future<List<dynamic>> viewDirectory(int directoryId) async {
     final url = Uri.parse(
-        'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/directory/view'); // 파일 생성 API 엔드포인트
-    final token = await getToken(); // 토큰을 비동기로 가져옴
+        'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/directory/view');
+    final token = await getToken();
 
-    print(token);
+    // 추가된 디버깅 정보
+    print('Sending request to view directory with ID: $directoryId');
+    print('Token: $token');
 
     final response = await http.post(
       url,
@@ -88,23 +90,53 @@ class DirectoryController {
         "directory_id": directoryId,
       }),
     );
-    print(response.statusCode);
-    print(response.reasonPhrase);
-    print('resopnse body: ${response.body}');
+
+    print('Response status: ${response.statusCode}');
+    print('Response reason: ${response.reasonPhrase}');
+    print('Response body: ${response.body}');
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to create file: ${response.reasonPhrase}');
+      throw Exception('Failed to view directory: ${response.reasonPhrase}');
+    }
+
+    return List<dynamic>.from(jsonDecode(response.body));
+  }
+
+  Future<void> saveMemo(int directoryId, String title, String content) async {
+    final url = Uri.parse(
+        'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/memo/save');
+    final token = await getToken();
+
+    if (token == null || token.isEmpty) {
+      throw Exception('Token is missing or empty');
+    }
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        'directory_id': directoryId,
+        'memo_name': title,
+        'content': content,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to save memo: ${response.reasonPhrase}');
     }
   }
 
-  Future<void> saveMemo(
-      String directoryId, String memoName, String content) async {
-    //디렉터리 열람 (메모들 열람)
+  Future<void> deleteDirectory(int directoryId) async {
     final url = Uri.parse(
-        'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/momo/save'); // 파일 생성 API 엔드포인트
-    final token = await getToken(); // 토큰을 비동기로 가져옴
+        'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/directory/delete');
+    final token = await getToken();
 
-    print(token);
+    if (token == null || token.isEmpty) {
+      throw Exception('Token is missing or empty');
+    }
 
     final response = await http.post(
       url,
@@ -113,17 +145,43 @@ class DirectoryController {
         'Authorization': 'Bearer $token',
       },
       body: jsonEncode({
-        "directory_id": directoryId,
-        "memo_name": memoName,
-        "content": content,
+        'directory_id': directoryId,
       }),
     );
-    print(response.statusCode);
-    print(response.reasonPhrase);
-    print('resopnse body: ${response.body}');
 
     if (response.statusCode != 200) {
-      throw Exception('Failed to create file: ${response.reasonPhrase}');
+      throw Exception('Failed to delete memo: ${response.reasonPhrase}');
     }
+  }
+
+  Future<Map<String, dynamic>> viewMemo(int memoId) async {
+    final url = Uri.parse(
+        'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/memo/view');
+    final token = await getToken();
+
+    print('Sending request to view memo with ID: $memoId');
+    print('Token: $token');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        "memo_id": memoId,
+      }),
+    );
+
+    print('Response status: ${response.statusCode}');
+    print('Response reason: ${response.reasonPhrase}');
+    print('Response body: ${response.body}');
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to view memo: ${response.reasonPhrase}');
+    }
+
+    // JSON 파싱
+    return jsonDecode(response.body) as Map<String, dynamic>;
   }
 }

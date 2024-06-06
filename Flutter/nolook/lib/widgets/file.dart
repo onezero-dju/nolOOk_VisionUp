@@ -1,19 +1,37 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:path_provider/path_provider.dart';
 
 // File 아이콘에 대한 클래스
-class File extends StatelessWidget {
-  final bool isSelectionMode;
-  final int index;
-  final bool isSelected;
-  final ValueChanged<bool?> onChanged;
-
-  const File({
+class FileWidget extends StatelessWidget {
+  const FileWidget({
     super.key,
+    required this.memoName,
     required this.isSelectionMode,
     required this.index,
     required this.isSelected,
     required this.onChanged,
   });
+  final String memoName;
+  final bool isSelectionMode;
+  final int index;
+  final bool isSelected;
+  final ValueChanged<bool?> onChanged;
+  Future<void> saveAsMarkdown(BuildContext context) async {
+    try {
+      final directory = await getApplicationDocumentsDirectory();
+      final path = '${directory.path}/$memoName.md';
+      final file = File(path);
+      await file
+          .writeAsString('# $memoName\n\nThis is the content of the memo.');
+
+      print(path);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error saving file: $e')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,18 +40,26 @@ class File extends StatelessWidget {
       children: [
         SizedBox(
           height: MediaQuery.of(context).size.height * 0.15,
-          child: Column(
-            children: [
-              IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.folder,
-                  size: MediaQuery.of(context).size.width * 0.2,
-                  color: Colors.blue,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                IconButton(
+                  onPressed: () async {
+                    await saveAsMarkdown(context);
+                  },
+                  icon: Column(
+                    children: [
+                      Icon(
+                        Icons.insert_drive_file,
+                        size: MediaQuery.of(context).size.width * 0.2,
+                        color: Colors.blue,
+                      ),
+                      Text(memoName), // Display directory name here
+                    ],
+                  ),
                 ),
-              ),
-              const Text('fcf'),
-            ],
+              ],
+            ),
           ),
         ),
         if (isSelectionMode)
