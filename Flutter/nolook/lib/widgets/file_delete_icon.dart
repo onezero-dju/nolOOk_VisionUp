@@ -1,16 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:nolook/Controller/directory_controller.dart';
+import 'package:nolook/View/directory_list.dart';
 import 'package:nolook/providers/file_selection_provider.dart';
 import 'package:provider/provider.dart';
 
 // FileDeleteIcon 아이콘에 대한 클래스
-class FileDeleteIcon extends StatelessWidget {
-  FileDeleteIcon({super.key});
+class FileDeleteIcon extends StatefulWidget {
+  const FileDeleteIcon({super.key});
+
+  @override
+  State<FileDeleteIcon> createState() => _FileDeleteIconState();
+}
+
+class _FileDeleteIconState extends State<FileDeleteIcon> {
   final DirectoryController _directoryController = DirectoryController();
+  @override
+  void initState() {
+    super.initState();
+  }
 
   Future<void> deleteSelectedDirectories(Set<int> directoryIds) async {
     try {
       print(directoryIds);
+
       await _directoryController.deleteSelectedDirectories(directoryIds);
     } catch (error) {
       print('Error: $error');
@@ -84,6 +96,13 @@ class FileDeleteIcon extends StatelessWidget {
                         onPressed: () async {
                           await deleteSelectedDirectories(selectedFiles);
                           Navigator.of(context).pop();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const DirectoryList(),
+                            ),
+                          );
                         },
                         child: const Text(
                           '확인',

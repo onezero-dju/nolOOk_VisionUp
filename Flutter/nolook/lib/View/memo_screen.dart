@@ -112,12 +112,11 @@ class _MemoScreenState extends State<MemoScreen> {
             FolderAdd(),
           ],
         ),
-        actions: [
+        actions: const [
           Row(
             children: [
-              const FileAdd(),
-              const Share(),
-              FileDeleteIcon(),
+              FileAdd(),
+              Share(),
             ],
           ),
         ],

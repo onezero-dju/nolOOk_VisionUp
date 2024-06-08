@@ -59,21 +59,7 @@ class _FolderState extends State<Folder> {
                     color: Colors.blue,
                   ),
                 ),
-                _isEditing
-                    ? TextFormField(
-                        controller: _textController,
-                        onFieldSubmitted: (value) {
-                          _updateDirectoryName(context, value);
-                        },
-                      )
-                    : GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            _isEditing = true;
-                          });
-                        },
-                        child: Text(widget.directoryName),
-                      ),
+                Text(widget.directoryName),
               ],
             ),
           ),

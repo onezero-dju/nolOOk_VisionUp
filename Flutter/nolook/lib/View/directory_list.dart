@@ -7,9 +7,7 @@ import 'package:nolook/widgets/file_delete_icon.dart';
 import 'package:nolook/widgets/folder.dart';
 import 'package:nolook/widgets/file_add.dart';
 import 'package:nolook/widgets/folder_add.dart';
-import 'package:nolook/widgets/share.dart';
 import 'package:provider/provider.dart';
-import 'package:nolook/widgets/file.dart';
 
 class DirectoryList extends StatefulWidget {
   const DirectoryList({super.key});
@@ -25,7 +23,9 @@ class _DirectoryListState extends State<DirectoryList> {
   @override
   void initState() {
     super.initState();
-    fetchDirList();
+    setState(() {
+      fetchDirList();
+    });
   }
 
   Future<void> fetchDirList() async {
@@ -56,7 +56,7 @@ class _DirectoryListState extends State<DirectoryList> {
                     children: [
                       const FileAdd(),
                       const DirectoryNameChangeIcon(),
-                      FileDeleteIcon(),
+                      const FileDeleteIcon(),
                       IconButton(
                         icon: const Icon(Icons.check),
                         onPressed: controller.toggleSelectionMode,

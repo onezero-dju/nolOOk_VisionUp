@@ -1,11 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:nolook/Controller/directory_controller.dart';
+import 'package:nolook/View/directory_list.dart';
 import 'package:provider/provider.dart';
 import 'package:nolook/providers/file_selection_provider.dart';
 
 // DirectoryNameChangeIcon 아이콘에 대한 클래스
-class DirectoryNameChangeIcon extends StatelessWidget {
+class DirectoryNameChangeIcon extends StatefulWidget {
   const DirectoryNameChangeIcon({super.key});
+
+  @override
+  State<DirectoryNameChangeIcon> createState() =>
+      _DirectoryNameChangeIconState();
+}
+
+class _DirectoryNameChangeIconState extends State<DirectoryNameChangeIcon> {
+  List<dynamic> dirList = [];
+  final DirectoryController _directoryController = DirectoryController();
+  Future<void> fetchDirList() async {
+    try {
+      final fetchedDirList = await _directoryController.fetchDirList();
+      setState(() {
+        dirList = fetchedDirList;
+      });
+      print("dirList: $dirList");
+    } catch (error) {
+      print('Error fetching directory list: $error');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -77,7 +98,15 @@ class DirectoryNameChangeIcon extends StatelessWidget {
                         await Provider.of<DirectoryController>(context,
                                 listen: false)
                             .directoryNameChange(selectedDirectoryId, newName);
+
                         Navigator.of(context).pop();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                const DirectoryList(),
+                          ),
+                        );
                       }
                     },
                     child: const Text('확인'),
