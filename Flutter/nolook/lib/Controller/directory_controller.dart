@@ -129,7 +129,7 @@ class DirectoryController with ChangeNotifier {
     }
   }
 
-  Future<void> deleteDirectory(int directoryId) async {
+  Future<void> deleteSelectedDirectories(Set<int> directoryIds) async {
     final url = Uri.parse(
         'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/directory/delete');
     final token = await getToken();
@@ -138,19 +138,21 @@ class DirectoryController with ChangeNotifier {
       throw Exception('Token is missing or empty');
     }
 
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer $token',
-      },
-      body: jsonEncode({
-        'directory_id': directoryId,
-      }),
-    );
+    for (int directoryId in directoryIds) {
+      final response = await http.post(
+        url,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: jsonEncode({
+          'directory_id': directoryId,
+        }),
+      );
 
-    if (response.statusCode != 200) {
-      throw Exception('Failed to delete memo: ${response.reasonPhrase}');
+      if (response.statusCode != 200) {
+        throw Exception('Failed to delete directory: ${response.reasonPhrase}');
+      }
     }
   }
 
@@ -183,5 +185,32 @@ class DirectoryController with ChangeNotifier {
 
     // JSON 파싱
     return jsonDecode(response.body) as Map<String, dynamic>;
+  }
+
+  Future<void> directoryNameChange(
+      int directoryId, String directoryName) async {
+    final url = Uri.parse(
+        'http://nolook.ap-northeast-2.elasticbeanstalk.com/api/directory/nameChange');
+    final token = await getToken();
+
+    if (token == null || token.isEmpty) {
+      throw Exception('Token is missing or empty');
+    }
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      },
+      body: jsonEncode({
+        "directory_id": directoryId,
+        "directory_name": directoryName,
+      }),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete directory: ${response.reasonPhrase}');
+    }
   }
 }

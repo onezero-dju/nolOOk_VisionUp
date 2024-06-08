@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:nolook/Controller/directory_controller.dart';
 import 'package:nolook/View/file_list.dart';
 import 'package:nolook/providers/file_selection_provider.dart';
+import 'package:nolook/widgets/directory_name_change_icon.dart';
+import 'package:nolook/widgets/file_delete_icon.dart';
 import 'package:nolook/widgets/folder.dart';
 import 'package:nolook/widgets/file_add.dart';
 import 'package:nolook/widgets/folder_add.dart';
@@ -32,7 +34,7 @@ class _DirectoryListState extends State<DirectoryList> {
       setState(() {
         dirList = fetchedDirList;
       });
-      print("dirlist: $dirList");
+      print("dirList: $dirList");
     } catch (error) {
       print('Error fetching directory list: $error');
     }
@@ -53,7 +55,8 @@ class _DirectoryListState extends State<DirectoryList> {
                   Row(
                     children: [
                       const FileAdd(),
-                      const Share(),
+                      const DirectoryNameChangeIcon(),
+                      FileDeleteIcon(),
                       IconButton(
                         icon: const Icon(Icons.check),
                         onPressed: controller.toggleSelectionMode,
@@ -82,13 +85,19 @@ class _DirectoryListState extends State<DirectoryList> {
                         ),
                       );
                     },
-                    child: Folder(
-                      directoryName: directoryName,
-                      isSelectionMode: controller.isSelectionMode,
-                      index: index,
-                      isSelected: controller.selectedFiles.contains(index),
-                      onChanged: (value) =>
-                          controller.onCheckboxChanged(value, index),
+                    child: Column(
+                      children: [
+                        Folder(
+                          directoryName: directoryName,
+                          isSelectionMode: controller.isSelectionMode,
+                          index: directoryId,
+                          isSelected: controller.selectedDirectoryIds
+                              .contains(directoryId),
+                          onChanged: (value) =>
+                              controller.onCheckboxChanged(value, directoryId),
+                          directoryId: directoryId,
+                        ),
+                      ],
                     ),
                   );
                 },

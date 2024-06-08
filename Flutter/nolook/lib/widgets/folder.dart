@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:nolook/View/file_list.dart';
+import 'package:nolook/Controller/directory_controller.dart';
+import 'package:provider/provider.dart';
 
 // Folder 아이콘에 대한 클래스
-class Folder extends StatelessWidget {
+class Folder extends StatefulWidget {
   final bool isSelectionMode;
   final int index;
   final bool isSelected;
   final ValueChanged<bool?> onChanged;
   final String directoryName;
+  final int directoryId;
 
   const Folder({
     super.key,
@@ -16,7 +18,28 @@ class Folder extends StatelessWidget {
     required this.isSelected,
     required this.onChanged,
     required this.directoryName,
+    required this.directoryId,
   });
+
+  @override
+  _FolderState createState() => _FolderState();
+}
+
+class _FolderState extends State<Folder> {
+  late TextEditingController _textController;
+  bool _isEditing = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _textController = TextEditingController(text: widget.directoryName);
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,27 +59,52 @@ class Folder extends StatelessWidget {
                     color: Colors.blue,
                   ),
                 ),
-                Text(directoryName), // Display directory name here
+                _isEditing
+                    ? TextFormField(
+                        controller: _textController,
+                        onFieldSubmitted: (value) {
+                          _updateDirectoryName(context, value);
+                        },
+                      )
+                    : GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            _isEditing = true;
+                          });
+                        },
+                        child: Text(widget.directoryName),
+                      ),
               ],
             ),
           ),
         ),
-        if (isSelectionMode)
+        if (widget.isSelectionMode)
           Positioned(
             bottom: MediaQuery.of(context).size.height * 0.03,
             left: MediaQuery.of(context).size.width * 0.06,
             child: Checkbox(
-              fillColor: WidgetStateProperty.resolveWith((states) {
-                if (states.contains(WidgetState.selected)) {
-                  return const Color.fromARGB(255, 8, 12, 204);
-                }
-                return null;
-              }),
-              value: isSelected,
-              onChanged: onChanged,
+              value: widget.isSelected,
+              onChanged: widget.onChanged,
             ),
           ),
       ],
     );
+  }
+
+  void _updateDirectoryName(BuildContext context, String newName) {
+    final directoryController =
+        Provider.of<DirectoryController>(context, listen: false);
+    directoryController
+        .directoryNameChange(widget.directoryId, newName)
+        .then((_) {
+      setState(() {
+        _isEditing = false;
+      });
+    }).catchError((error) {
+      // Handle error, e.g. show a snackbar
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to change directory name: $error')),
+      );
+    });
   }
 }

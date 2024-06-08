@@ -118,8 +118,6 @@ class _FileListState extends State<FileList> {
                             memoName: memoName,
                             isSelectionMode: controller.isSelectionMode,
                             index: index,
-                            isSelected:
-                                controller.selectedFiles.contains(index),
                             onChanged: (value) =>
                                 controller.onCheckboxChanged(value, index),
                           ),

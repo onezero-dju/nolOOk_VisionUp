@@ -9,13 +9,12 @@ class FileWidget extends StatelessWidget {
     required this.memoName,
     required this.isSelectionMode,
     required this.index,
-    required this.isSelected,
     required this.onChanged,
   });
   final String memoName;
   final bool isSelectionMode;
   final int index;
-  final bool isSelected;
+
   final ValueChanged<bool?> onChanged;
   Future<void> saveAsMarkdown(BuildContext context) async {
     try {
@@ -73,8 +72,8 @@ class FileWidget extends StatelessWidget {
                 }
                 return null;
               }),
-              value: isSelected,
               onChanged: onChanged,
+              value: null,
             ),
           ),
       ],
