@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:nolook/Controller/directory_controller.dart';
 import 'package:nolook/View/file_list.dart';
 import 'package:nolook/providers/file_selection_provider.dart';
@@ -49,19 +50,25 @@ class _DirectoryListState extends State<DirectoryList> {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             home: Scaffold(
+              backgroundColor: const Color.fromARGB(255, 242, 243, 235),
               appBar: AppBar(
+                backgroundColor: const Color.fromARGB(255, 233, 233, 230),
                 leading: const FolderAdd(),
                 actions: [
-                  Row(
-                    children: [
-                      const FileAdd(),
-                      const DirectoryNameChangeIcon(),
-                      const FileDeleteIcon(),
-                      IconButton(
-                        icon: const Icon(Icons.check),
-                        onPressed: controller.toggleSelectionMode,
-                      ),
-                    ],
+                  Expanded(
+                    child: Row(
+                      children: [
+                        const FileAdd(),
+                        const DirectoryNameChangeIcon(),
+                        const FileDeleteIcon(),
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            'assets/images/Share.svg',
+                          ),
+                          onPressed: controller.toggleSelectionMode,
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
@@ -75,8 +82,8 @@ class _DirectoryListState extends State<DirectoryList> {
                   final directory = dirList[index];
                   final directoryName = directory['directoryName'];
                   final directoryId = directory['id'] as int;
-                  return ElevatedButton(
-                    onPressed: () async {
+                  return GestureDetector(
+                    onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -85,20 +92,18 @@ class _DirectoryListState extends State<DirectoryList> {
                         ),
                       );
                     },
-                    child: Column(
-                      children: [
-                        Folder(
-                          directoryName: directoryName,
-                          isSelectionMode: controller.isSelectionMode,
-                          index: directoryId,
-                          isSelected: controller.selectedDirectoryIds
-                              .contains(directoryId),
-                          onChanged: (value) =>
-                              controller.onCheckboxChanged(value, directoryId),
-                          directoryId: directoryId,
-                        ),
-                      ],
-                    ),
+                    child: Column(children: [
+                      Folder(
+                        directoryName: directoryName,
+                        isSelectionMode: controller.isSelectionMode,
+                        index: directoryId,
+                        isSelected: controller.selectedDirectoryIds
+                            .contains(directoryId),
+                        onChanged: (value) =>
+                            controller.onCheckboxChanged(value, directoryId),
+                        directoryId: directoryId,
+                      )
+                    ]),
                   );
                 },
               ),

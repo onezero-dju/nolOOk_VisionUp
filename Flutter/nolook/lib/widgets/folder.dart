@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:nolook/Controller/directory_controller.dart';
 import 'package:provider/provider.dart';
 
@@ -51,13 +52,10 @@ class _FolderState extends State<Folder> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.folder,
-                    size: MediaQuery.of(context).size.width * 0.2,
-                    color: Colors.blue,
-                  ),
+                SvgPicture.asset(
+                  'assets/images/Folder.svg',
+                  width: 100,
+                  height: 70,
                 ),
                 Text(widget.directoryName),
               ],

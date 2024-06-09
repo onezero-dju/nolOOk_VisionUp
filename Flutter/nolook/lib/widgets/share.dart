@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 //Share 아이콘에 대한 클래스
 class Share extends StatelessWidget {
@@ -6,12 +7,12 @@ class Share extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {},
-      icon: Icon(
-        Icons.share,
-        size: MediaQuery.of(context).size.width * 0.12,
-        color: const Color.fromARGB(255, 90, 174, 207),
+    return GestureDetector(
+      onTap: () {},
+      child: SvgPicture.asset(
+        'assets/images/Share.svg',
+        width: 100,
+        height: 100,
       ),
     );
   }

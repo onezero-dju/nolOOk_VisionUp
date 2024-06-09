@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:nolook/Controller/directory_controller.dart';
 import 'package:nolook/View/directory_list.dart';
 import 'package:nolook/providers/file_selection_provider.dart';
@@ -120,10 +121,10 @@ class _FileDeleteIconState extends State<FileDeleteIcon> {
           );
         }
       },
-      icon: Icon(
-        Icons.delete,
-        size: MediaQuery.of(context).size.width * 0.13,
-        color: Colors.blue,
+      icon: SvgPicture.asset(
+        'assets/images/Delete.svg',
+        width: 100,
+        height: 100,
       ),
     );
   }

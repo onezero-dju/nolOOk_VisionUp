@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class FileAdd extends StatelessWidget {
   const FileAdd({
@@ -7,13 +8,10 @@ class FileAdd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {},
-      icon: Icon(
-        Icons.note_add_outlined,
-        size: MediaQuery.of(context).size.width * 0.12,
-        color: const Color.fromARGB(255, 90, 174, 207),
-      ),
+    return SvgPicture.asset(
+      'assets/images/FileAdd.svg',
+      width: 100,
+      height: 100,
     );
   }
 }

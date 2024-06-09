@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 //FolderAdd 아이콘에 대한 클래스
 class FolderAdd extends StatelessWidget {
@@ -6,12 +7,12 @@ class FolderAdd extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {},
-      icon: Icon(
-        Icons.create_new_folder,
-        size: MediaQuery.of(context).size.width * 0.13,
-        color: Colors.blue,
+    return GestureDetector(
+      onTap: () {},
+      child: SvgPicture.asset(
+        'assets/images/FolderAdd.svg',
+        width: 100,
+        height: 100,
       ),
     );
   }

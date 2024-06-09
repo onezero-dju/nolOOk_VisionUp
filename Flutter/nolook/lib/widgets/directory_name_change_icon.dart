@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:nolook/Controller/directory_controller.dart';
 import 'package:nolook/View/directory_list.dart';
 import 'package:provider/provider.dart';
@@ -117,10 +118,10 @@ class _DirectoryNameChangeIconState extends State<DirectoryNameChangeIcon> {
           );
         }
       },
-      icon: Icon(
-        Icons.edit,
-        size: MediaQuery.of(context).size.width * 0.12,
-        color: const Color.fromARGB(255, 90, 174, 207),
+      icon: SvgPicture.asset(
+        'assets/images/Modify.svg',
+        width: 100,
+        height: 100,
       ),
     );
   }

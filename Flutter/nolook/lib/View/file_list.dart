@@ -1,10 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:nolook/Controller/directory_controller.dart';
-import 'package:nolook/View/memo_screen.dart';
 import 'package:nolook/providers/file_selection_provider.dart';
-import 'package:nolook/widgets/folder.dart';
 import 'package:nolook/widgets/file_add.dart';
 import 'package:nolook/widgets/folder_add.dart';
 import 'package:nolook/widgets/share.dart';
