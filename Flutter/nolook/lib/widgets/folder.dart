@@ -64,8 +64,8 @@ class _FolderState extends State<Folder> {
         ),
         if (widget.isSelectionMode)
           Positioned(
-            bottom: MediaQuery.of(context).size.height * 0.03,
-            left: MediaQuery.of(context).size.width * 0.06,
+            bottom: MediaQuery.of(context).size.height * 0.07,
+            left: MediaQuery.of(context).size.width * 0.04,
             child: Checkbox(
               value: widget.isSelected,
               onChanged: widget.onChanged,

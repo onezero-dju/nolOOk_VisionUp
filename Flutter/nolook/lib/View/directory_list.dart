@@ -57,14 +57,13 @@ class _DirectoryListState extends State<DirectoryList> {
                 actions: [
                   Expanded(
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         const FileAdd(),
                         const DirectoryNameChangeIcon(),
                         const FileDeleteIcon(),
                         IconButton(
-                          icon: SvgPicture.asset(
-                            'assets/images/Share.svg',
-                          ),
+                          icon: const Icon(Icons.check),
                           onPressed: controller.toggleSelectionMode,
                         ),
                       ],

@@ -13,10 +13,12 @@ class FolderMove extends StatelessWidget {
         Navigator.push(context,
             MaterialPageRoute(builder: (context) => const DirectoryList()));
       },
-      child: SvgPicture.asset(
-        'assets/images/Directory.svg',
-        width: 100,
-        height: 100,
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.17,
+        height: MediaQuery.of(context).size.width * 0.17,
+        child: SvgPicture.asset(
+          'assets/images/Directory.svg',
+        ),
       ),
     );
   }

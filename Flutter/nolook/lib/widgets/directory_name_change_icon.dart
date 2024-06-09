@@ -31,97 +31,102 @@ class _DirectoryNameChangeIconState extends State<DirectoryNameChangeIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        final fileSelectionController =
-            Provider.of<FileSelectionController>(context, listen: false);
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.17,
+      height: MediaQuery.of(context).size.height * 0.4,
+      child: IconButton(
+        onPressed: () {
+          final fileSelectionController =
+              Provider.of<FileSelectionController>(context, listen: false);
 
-        if (fileSelectionController.selectedDirectoryIds.isEmpty) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '폴더를 선택해주세요',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
+          if (fileSelectionController.selectedDirectoryIds.isEmpty) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '폴더를 선택해주세요',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ],
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        '확인',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
                       ),
                     ),
                   ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
+                );
+              },
+            );
+          } else {
+            final selectedDirectoryId =
+                fileSelectionController.selectedDirectoryIds.first;
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                String newName = '';
+                return AlertDialog(
+                  title: const Text('디렉토리 이름 변경'),
+                  content: TextFormField(
+                    onChanged: (value) {
+                      newName = value;
                     },
-                    child: const Text(
-                      '확인',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
+                    decoration: const InputDecoration(
+                      hintText: '새 이름을 입력하세요',
                     ),
                   ),
-                ],
-              );
-            },
-          );
-        } else {
-          final selectedDirectoryId =
-              fileSelectionController.selectedDirectoryIds.first;
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              String newName = '';
-              return AlertDialog(
-                title: const Text('디렉토리 이름 변경'),
-                content: TextFormField(
-                  onChanged: (value) {
-                    newName = value;
-                  },
-                  decoration: const InputDecoration(
-                    hintText: '새 이름을 입력하세요',
-                  ),
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text('취소'),
-                  ),
-                  TextButton(
-                    onPressed: () async {
-                      if (newName.isNotEmpty) {
-                        await Provider.of<DirectoryController>(context,
-                                listen: false)
-                            .directoryNameChange(selectedDirectoryId, newName);
-
+                  actions: [
+                    TextButton(
+                      onPressed: () {
                         Navigator.of(context).pop();
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                const DirectoryList(),
-                          ),
-                        );
-                      }
-                    },
-                    child: const Text('확인'),
-                  ),
-                ],
-              );
-            },
-          );
-        }
-      },
-      icon: SvgPicture.asset(
-        'assets/images/Modify.svg',
-        width: 100,
-        height: 100,
+                      },
+                      child: const Text('취소'),
+                    ),
+                    TextButton(
+                      onPressed: () async {
+                        if (newName.isNotEmpty) {
+                          await Provider.of<DirectoryController>(context,
+                                  listen: false)
+                              .directoryNameChange(
+                                  selectedDirectoryId, newName);
+
+                          Navigator.of(context).pop();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const DirectoryList(),
+                            ),
+                          );
+                        }
+                      },
+                      child: const Text('확인'),
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        },
+        icon: SvgPicture.asset(
+          'assets/images/Modify.svg',
+          width: MediaQuery.of(context).size.width * 0.09,
+          height: MediaQuery.of(context).size.height * 0.2,
+        ),
       ),
     );
   }

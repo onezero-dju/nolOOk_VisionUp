@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:nolook/Controller/directory_controller.dart';
 import 'package:nolook/Model/contentEdItor.dart';
+import 'package:nolook/Model/gpt.dart';
 import 'package:nolook/Model/titleEditor.dart';
+import 'package:nolook/View/directory_list.dart';
 import 'package:nolook/providers/selected_directory_provider.dart';
 import 'package:nolook/widgets/share.dart';
 import 'package:provider/provider.dart';
@@ -23,6 +25,7 @@ class _MemoScreenState extends State<MemoScreen> {
   late TextEditingController _titlecontroller;
   late TextEditingController _contentcontroller;
   final DirectoryController _directoryController = DirectoryController();
+  final GPTService _gptService = GPTService(); // Initialize the GPT service
   List<dynamic> dirList = [];
 
   @override
@@ -77,21 +80,66 @@ class _MemoScreenState extends State<MemoScreen> {
   }
 
   Future<void> saveMemo() async {
-    final selectedDirectoryId =
-        Provider.of<SelectedDirectoryProvider>(context, listen: false)
-            .selectedDirectoryId;
+    final selectedDirectoryProvider =
+        Provider.of<SelectedDirectoryProvider>(context, listen: false);
+    final String content = _contentcontroller.text;
+    print('dd');
     try {
-      print(
-          'Trying to save memo with title: ${_titlecontroller.text} and content: ${_contentcontroller.text} and id is $selectedDirectoryId');
-      await _directoryController.saveMemo(selectedDirectoryId!,
-          _titlecontroller.text, _contentcontroller.text); // 디렉터리 id 넣어야 함
-      if (mounted) {
-        await fetchDirList(); // 디렉토리 생성 후 dirList 업데이트
+      // Step 1: GPT에서 키워드 추출
+      final String keyword = await _gptService.getKeywordFromText(content);
+      print('Extracted keyword: $keyword');
+
+      // Step 2: 키워드가 기존 디렉토리 이름에 있는지 확인
+      bool directoryExists = false;
+      int? directoryId;
+
+      for (var dir in dirList) {
+        if (dir['directoryName'] == keyword) {
+          directoryExists = true;
+          directoryId = dir['id'];
+          break;
+        }
       }
+
+      if (!directoryExists) {
+        // Step 3: 키워드가 기존 디렉토리에 없는 경우
+        await _directoryController.createDirectory(keyword);
+        await fetchDirList(); // 디렉토리 리스트 갱신
+        for (var dir in dirList) {
+          if (dir['directoryName'] == keyword) {
+            directoryId = dir['id'];
+            break;
+          }
+        }
+      }
+
+      // directoryId가 null인지 확인
+      if (directoryId == null) {
+        throw Exception('Directory ID not found.');
+      }
+
+      // 메모 저장
+      await _directoryController.saveMemo(
+        directoryId,
+        _titlecontroller.text,
+        _contentcontroller.text,
+      );
+
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Memo saved successfully')),
+        );
+      }
+
+      // Navigate to DirectoryList screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const DirectoryList()),
+      );
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to create memo: $error')),
+          SnackBar(content: Text('Failed to save memo: $error')),
         );
       }
       print('Error: $error');
@@ -101,8 +149,10 @@ class _MemoScreenState extends State<MemoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 242, 243, 235),
       appBar: AppBar(
-        leadingWidth: 500,
+        backgroundColor: const Color.fromARGB(255, 233, 233, 230),
+        leadingWidth: 5000,
         leading: const Expanded(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -116,9 +166,9 @@ class _MemoScreenState extends State<MemoScreen> {
             children: [
               const FolderAdd(),
               const Share(),
-              TextButton(
-                onPressed: () {
-                  saveDirectory();
+              GestureDetector(
+                onTap: () {
+                  saveMemo();
                   _titlecontroller.clear(); // 제목 텍스트 초기화
                   _contentcontroller.clear(); // 내용 텍스트 초기화
                   Navigator.pushReplacement(

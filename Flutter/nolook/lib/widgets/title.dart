@@ -30,7 +30,8 @@ class _TitleEditorState extends State<TitleEditor> {
                   hintText: '제목을 입력하세요',
                   border: InputBorder.none,
                 ),
-                style: const TextStyle(color: Colors.black),
+                style: const TextStyle(
+                    color: Colors.black, fontWeight: FontWeight.bold),
                 cursorColor: Colors.black,
                 onChanged: (text) {
                   model.text = text;

@@ -7,12 +7,11 @@ class Share extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {},
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.17,
+      height: MediaQuery.of(context).size.width * 0.3,
       child: SvgPicture.asset(
         'assets/images/Share.svg',
-        width: 100,
-        height: 100,
       ),
     );
   }

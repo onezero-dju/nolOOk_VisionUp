@@ -30,7 +30,10 @@ class _ContentEditorState extends State<Content> {
                   hintText: '내용을 입력하세요',
                   border: InputBorder.none,
                 ),
-                style: const TextStyle(color: Colors.black),
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
                 cursorColor: Colors.black,
                 onChanged: (text) {
                   model.text = text;

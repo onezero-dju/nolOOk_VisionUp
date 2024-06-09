@@ -32,99 +32,102 @@ class _FileDeleteIconState extends State<FileDeleteIcon> {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {
-        final selectedFiles =
-            Provider.of<FileSelectionController>(context, listen: false)
-                .selectedDirectoryIds;
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.17,
+      child: IconButton(
+        onPressed: () {
+          final selectedFiles =
+              Provider.of<FileSelectionController>(context, listen: false)
+                  .selectedDirectoryIds;
 
-        if (selectedFiles.isEmpty) {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '폴더를 선택해주세요',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                      ),
-                    ),
-                  ],
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                    child: const Text(
-                      '확인',
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            },
-          );
-        } else {
-          showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('Directory'),
-                content: const Text('정말로 삭제하시겠습니까?'),
-                actions: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+          if (selectedFiles.isEmpty) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  content: const Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      OutlinedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text(
-                          '취소',
-                          style: TextStyle(
-                            color: Colors.red,
-                          ),
-                        ),
-                      ),
-                      OutlinedButton(
-                        onPressed: () async {
-                          await deleteSelectedDirectories(selectedFiles);
-                          Navigator.of(context).pop();
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const DirectoryList(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          '확인',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      Text(
+                        '폴더를 선택해주세요',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
                         ),
                       ),
                     ],
                   ),
-                ],
-              );
-            },
-          );
-        }
-      },
-      icon: SvgPicture.asset(
-        'assets/images/Delete.svg',
-        width: 100,
-        height: 100,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text(
+                        '확인',
+                        style: TextStyle(
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          } else {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  title: const Text('Directory'),
+                  content: const Text('정말로 삭제하시겠습니까?'),
+                  actions: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text(
+                            '취소',
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                        OutlinedButton(
+                          onPressed: () async {
+                            await deleteSelectedDirectories(selectedFiles);
+                            Navigator.of(context).pop();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const DirectoryList(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            '확인',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
+            );
+          }
+        },
+        icon: SvgPicture.asset(
+          'assets/images/Delete.svg',
+          width: 100,
+          height: 100,
+        ),
       ),
     );
   }

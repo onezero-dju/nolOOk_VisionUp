@@ -25,9 +25,6 @@ class _LoginScreenState extends State<LoginScreen> {
           _passwordController.text,
         );
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Registration successful')),
-          );
           Navigator.push(
             context,
             MaterialPageRoute(
