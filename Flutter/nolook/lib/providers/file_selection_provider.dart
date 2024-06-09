@@ -2,24 +2,29 @@ import 'package:flutter/material.dart';
 
 class FileSelectionController extends ChangeNotifier {
   bool _isSelectionMode = false;
-  final Set<int> _selectedFiles = {};
+  final Set<int> _selectedDirectoryIds = {};
 
   bool get isSelectionMode => _isSelectionMode;
-  Set<int> get selectedFiles => _selectedFiles;
+  Set<int> get selectedDirectoryIds => _selectedDirectoryIds;
 
   void toggleSelectionMode() {
     _isSelectionMode = !_isSelectionMode;
     if (!_isSelectionMode) {
-      _selectedFiles.clear();
+      _selectedDirectoryIds.clear();
     }
     notifyListeners();
   }
 
-  void onCheckboxChanged(bool? value, int index) {
+  void disableSelectionMode() {
+    _isSelectionMode = false;
+    notifyListeners();
+  }
+
+  void onCheckboxChanged(bool? value, int directoryId) {
     if (value == true) {
-      _selectedFiles.add(index);
+      _selectedDirectoryIds.add(directoryId);
     } else {
-      _selectedFiles.remove(index);
+      _selectedDirectoryIds.remove(directoryId);
     }
     notifyListeners();
   }

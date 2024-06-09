@@ -4,6 +4,7 @@ import 'package:nolook/Model/contentEdItor.dart';
 import 'package:nolook/Model/titleEditor.dart';
 import 'package:nolook/View/directory_list.dart';
 import 'package:nolook/providers/selected_directory_provider.dart';
+import 'package:nolook/widgets/directory_name_change_icon.dart';
 import 'package:provider/provider.dart';
 import 'package:nolook/widgets/content.dart';
 import 'package:nolook/widgets/comment.dart';
@@ -111,12 +112,11 @@ class _MemoScreenState extends State<MemoScreen> {
             FolderAdd(),
           ],
         ),
-        actions: [
+        actions: const [
           Row(
             children: [
-              const FileAdd(),
-              const Share(),
-              FileDeleteIcon(),
+              FileAdd(),
+              Share(),
             ],
           ),
         ],
@@ -167,7 +167,7 @@ class _MemoScreenState extends State<MemoScreen> {
                         width: MediaQuery.of(context).size.width * 0.04,
                       ),
                       OutlinedButton(
-                        onPressed: saveMemo,
+                        onPressed: saveDirectory,
                         child: const Text(
                           '저장',
                           style: TextStyle(

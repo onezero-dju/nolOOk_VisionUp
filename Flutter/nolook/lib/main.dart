@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nolook/Controller/directory_controller.dart';
 import 'package:nolook/Model/contentEdItor.dart';
 import 'package:nolook/Model/titleEditor.dart';
 import 'package:nolook/providers/file_selection_provider.dart';
@@ -15,6 +16,7 @@ void main() {
         // ChangeNotifierProvider(create: (_) => DirectoryProvider()),
         ChangeNotifierProvider(create: (_) => FileSelectionController()),
         ChangeNotifierProvider(create: (_) => SelectedDirectoryProvider()),
+        ChangeNotifierProvider(create: (_) => DirectoryController()),
       ],
       child: const nolOOk(),
     ),
