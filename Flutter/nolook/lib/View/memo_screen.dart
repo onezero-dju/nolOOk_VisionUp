@@ -80,66 +80,21 @@ class _MemoScreenState extends State<MemoScreen> {
   }
 
   Future<void> saveMemo() async {
-    final selectedDirectoryProvider =
-        Provider.of<SelectedDirectoryProvider>(context, listen: false);
-    final String content = _contentcontroller.text;
-    print('dd');
+    final selectedDirectoryId =
+        Provider.of<SelectedDirectoryProvider>(context, listen: false)
+            .selectedDirectoryId;
     try {
-      // Step 1: GPT에서 키워드 추출
-      final String keyword = await _gptService.getKeywordFromText(content);
-      print('Extracted keyword: $keyword');
-
-      // Step 2: 키워드가 기존 디렉토리 이름에 있는지 확인
-      bool directoryExists = false;
-      int? directoryId;
-
-      for (var dir in dirList) {
-        if (dir['directoryName'] == keyword) {
-          directoryExists = true;
-          directoryId = dir['id'];
-          break;
-        }
-      }
-
-      if (!directoryExists) {
-        // Step 3: 키워드가 기존 디렉토리에 없는 경우
-        await _directoryController.createDirectory(keyword);
-        await fetchDirList(); // 디렉토리 리스트 갱신
-        for (var dir in dirList) {
-          if (dir['directoryName'] == keyword) {
-            directoryId = dir['id'];
-            break;
-          }
-        }
-      }
-
-      // directoryId가 null인지 확인
-      if (directoryId == null) {
-        throw Exception('Directory ID not found.');
-      }
-
-      // 메모 저장
-      await _directoryController.saveMemo(
-        directoryId,
-        _titlecontroller.text,
-        _contentcontroller.text,
-      );
-
+      print(
+          'Trying to save memo with title: ${_titlecontroller.text} and content: ${_contentcontroller.text} and id is $selectedDirectoryId');
+      await _directoryController.saveMemo(selectedDirectoryId!,
+          _titlecontroller.text, _contentcontroller.text); // 디렉터리 id 넣어야 함
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Memo saved successfully')),
-        );
+        await fetchDirList(); // 디렉토리 생성 후 dirList 업데이트
       }
-
-      // Navigate to DirectoryList screen
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const DirectoryList()),
-      );
     } catch (error) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save memo: $error')),
+          SnackBar(content: Text('Failed to create memo: $error')),
         );
       }
       print('Error: $error');
@@ -187,9 +142,9 @@ class _MemoScreenState extends State<MemoScreen> {
       body: const Column(
         children: [
           Divider(
-            height: 1,
-            thickness: 1,
-            color: Colors.black,
+            height: 4,
+            thickness: 1.4,
+            color: Color.fromARGB(255, 200, 211, 161),
           ),
           Expanded(
             child: SingleChildScrollView(
@@ -197,9 +152,9 @@ class _MemoScreenState extends State<MemoScreen> {
                 children: [
                   TitleEditor(),
                   Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Colors.black,
+                    height: 10,
+                    thickness: 1.4,
+                    color: Color.fromARGB(255, 200, 211, 161),
                   ),
                   Content(),
                   // Divider(

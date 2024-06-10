@@ -62,6 +62,8 @@ flutter:
     - assets/images/nolOOK.svg
     - assets/images/Share.svg
     - assets/images/
+    - assets/images/Check.svg
+    - assets/images/File.svg
   fonts:
     - family: CustomIcons
       fonts:

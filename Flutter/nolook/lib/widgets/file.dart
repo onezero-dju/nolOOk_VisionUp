@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:path_provider/path_provider.dart';
 
 // File 아이콘에 대한 클래스
@@ -46,15 +47,21 @@ class FileWidget extends StatelessWidget {
                   onPressed: () async {
                     await saveAsMarkdown(context);
                   },
-                  icon: Column(
-                    children: [
-                      Icon(
-                        Icons.insert_drive_file,
-                        size: MediaQuery.of(context).size.width * 0.2,
-                        color: Colors.blue,
-                      ),
-                      Text(memoName), // Display directory name here
-                    ],
+                  icon: SvgPicture.asset(
+                    'assets/images/File.svg',
+                    width: MediaQuery.of(context).size.width * 0.2,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: MediaQuery.of(context).size.width * 0.04,
+                  ),
+                  child: Text(
+                    memoName,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.width * 0.04,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],

@@ -62,9 +62,15 @@ class _DirectoryListState extends State<DirectoryList> {
                         const FileAdd(),
                         const DirectoryNameChangeIcon(),
                         const FileDeleteIcon(),
-                        IconButton(
-                          icon: const Icon(Icons.check),
-                          onPressed: controller.toggleSelectionMode,
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.17,
+                          height: MediaQuery.of(context).size.height * 0.17,
+                          child: IconButton(
+                            icon: SvgPicture.asset(
+                              'assets/images/Check.svg',
+                            ),
+                            onPressed: controller.toggleSelectionMode,
+                          ),
                         ),
                       ],
                     ),

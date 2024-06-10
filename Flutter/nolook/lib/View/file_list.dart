@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:nolook/Controller/directory_controller.dart';
 import 'package:nolook/providers/file_selection_provider.dart';
 import 'package:nolook/widgets/file_add.dart';
@@ -54,9 +55,27 @@ class _FileListState extends State<FileList> {
             actions: [
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop();
+                  Navigator.pop(context);
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: Text(viewMemoDetails['memoName']),
+                        content: const Text(
+                            'Flutter is a versatile open-source framework by Google for building natively compiled, multi-platform applications from a single codebase.'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            child: const Text('확인'),
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 },
-                child: const Text('Close'),
+                child: const Text('요약'),
               ),
             ],
           );
@@ -86,9 +105,15 @@ class _FileListState extends State<FileList> {
                     children: [
                       const FileAdd(),
                       const Share(),
-                      IconButton(
-                        icon: const Icon(Icons.check),
-                        onPressed: controller.toggleSelectionMode,
+                      SizedBox(
+                        width: MediaQuery.of(context).size.width * 0.17,
+                        height: MediaQuery.of(context).size.height * 0.17,
+                        child: IconButton(
+                          icon: SvgPicture.asset(
+                            'assets/images/Check.svg',
+                          ),
+                          onPressed: controller.toggleSelectionMode,
+                        ),
                       ),
                     ],
                   ),
@@ -108,9 +133,9 @@ class _FileListState extends State<FileList> {
                         final memoName = memo['memoName'];
                         final memoId = memo['memoId'] as int?;
                         // Check if memoId is null and handle it
-                        return ElevatedButton(
-                          onPressed: () {
-                            viewMemo(memoId!); // memoId를 전달
+                        return GestureDetector(
+                          onTap: () {
+                            viewMemo(memoId!);
                           },
                           child: FileWidget(
                             memoName: memoName,
