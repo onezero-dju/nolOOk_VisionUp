@@ -1,129 +1,68 @@
 import 'package:flutter/material.dart';
-import 'package:nolook/Controller/directory_controller.dart';
-import 'package:nolook/Model/contentEdItor.dart';
-import 'package:nolook/Model/gpt.dart';
-import 'package:nolook/Model/titleEditor.dart';
-import 'package:nolook/View/directory_list.dart';
-import 'package:nolook/providers/selected_directory_provider.dart';
-import 'package:provider/provider.dart';
-import 'package:nolook/widgets/content.dart';
-import 'package:nolook/widgets/file_add.dart';
-import 'package:nolook/widgets/folder_add.dart';
-import 'package:nolook/widgets/folder_move.dart';
-import 'package:nolook/widgets/title.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class MemoScreen extends StatefulWidget {
-  const MemoScreen({super.key});
-
-  @override
-  _MemoScreenState createState() => _MemoScreenState();
+void main() {
+  runApp(const MyApp());
 }
 
-class _MemoScreenState extends State<MemoScreen> {
-  late TextEditingController _titlecontroller;
-  late TextEditingController _contentcontroller;
-  final DirectoryController _directoryController = DirectoryController();
-  final GPTService _gptService = GPTService(); // Initialize the GPT service
-  List<dynamic> dirList = [];
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
-  void initState() {
-    super.initState();
-    fetchDirList();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'ChatGPT App',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const ChatScreen(),
+    );
   }
+}
+
+class ChatScreen extends StatefulWidget {
+  const ChatScreen({super.key});
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _titlecontroller =
-        Provider.of<TitleEditorModel>(context, listen: false).controller;
-    _contentcontroller =
-        Provider.of<ContentEditorModel>(context, listen: false).controller;
-  }
+  _ChatScreenState createState() => _ChatScreenState();
+}
 
-  Future<void> fetchDirList() async {
-    try {
-      final fetchedDirList = await _directoryController.fetchDirList();
+class _ChatScreenState extends State<ChatScreen> {
+  final TextEditingController _controller = TextEditingController();
+  final List<Map<String, String>> _messages = [];
+  String model = "gpt-3.5-turbo";
+  Future<void> _sendMessage(String message) async {
+    setState(() {
+      _messages.add({'sender': 'user', 'message': message});
+    });
+
+    final response = await http.post(
+      Uri.parse('https://api.openai.com/v1/chat/completions'),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization':
+            'Bearer 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',
+      },
+      body: json.encode({
+        'model': model,
+        'prompt': message,
+        'max_tokens': 150,
+      }),
+    );
+    print(response.statusCode);
+    if (response.statusCode == 200) {
+      final data = json.decode(response.body);
+      final reply = data['choices'][0]['text'].trim();
+
       setState(() {
-        dirList = List<Map<String, dynamic>>.from(fetchedDirList);
+        _messages.add({'sender': 'bot', 'message': reply});
       });
-
-      if (dirList.isNotEmpty) {
-        final selectedDirectoryProvider =
-            Provider.of<SelectedDirectoryProvider>(context, listen: false);
-        selectedDirectoryProvider.setSelectedDirectoryId(dirList[0]['id']);
-      }
-
-      print("dirlist: $dirList");
-    } catch (error) {
-      print('Error fetching directory list: $error');
-    }
-  }
-
-  Future<void> saveMemo() async {
-    final selectedDirectoryProvider =
-        Provider.of<SelectedDirectoryProvider>(context, listen: false);
-    final String content = _contentcontroller.text;
-    print('dd');
-    try {
-      // Step 1: GPT에서 키워드 추출
-      final String keyword = await _gptService.getKeywordFromText(content);
-      print('Extracted keyword: $keyword');
-
-      // Step 2: 키워드가 기존 디렉토리 이름에 있는지 확인
-      bool directoryExists = false;
-      int? directoryId;
-
-      for (var dir in dirList) {
-        if (dir['directoryName'] == keyword) {
-          directoryExists = true;
-          directoryId = dir['id'];
-          break;
-        }
-      }
-
-      if (!directoryExists) {
-        // Step 3: 키워드가 기존 디렉토리에 없는 경우
-        await _directoryController.createDirectory(keyword);
-        await fetchDirList(); // 디렉토리 리스트 갱신
-        for (var dir in dirList) {
-          if (dir['directoryName'] == keyword) {
-            directoryId = dir['id'];
-            break;
-          }
-        }
-      }
-
-      // directoryId가 null인지 확인
-      if (directoryId == null) {
-        throw Exception('Directory ID not found.');
-      }
-
-      // 메모 저장
-      await _directoryController.saveMemo(
-        directoryId,
-        _titlecontroller.text,
-        _contentcontroller.text,
-      );
-
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Memo saved successfully')),
-        );
-      }
-
-      // Navigate to DirectoryList screen
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const DirectoryList()),
-      );
-    } catch (error) {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Failed to save memo: $error')),
-        );
-      }
-      print('Error: $error');
+    } else {
+      setState(() {
+        _messages.add(
+            {'sender': 'bot', 'message': 'Failed to get response from API'});
+      });
     }
   }
 
@@ -131,79 +70,50 @@ class _MemoScreenState extends State<MemoScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leadingWidth: 200,
-        leading: const Row(
-          children: [
-            FolderMove(),
-            FolderAdd(),
-          ],
-        ),
-        actions: const [
-          Row(
-            children: [
-              FileAdd(),
-            ],
-          ),
-        ],
+        title: const Text('ChatGPT App'),
       ),
       body: Column(
         children: [
-          const Divider(
-            height: 1,
-            thickness: 1,
-            color: Colors.black,
-          ),
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  const TitleEditor(),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Colors.black,
+            child: ListView.builder(
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final message = _messages[index];
+                return ListTile(
+                  title: Text(
+                    message['message']!,
+                    style: TextStyle(
+                      color: message['sender'] == 'user'
+                          ? Colors.blue
+                          : Colors.black,
+                    ),
                   ),
-                  const Content(),
-                  const Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: Colors.black,
+                  subtitle: Text(message['sender']!),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      hintText: 'Enter your message',
+                    ),
                   ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      OutlinedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const DirectoryList(),
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          '취소',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.04,
-                      ),
-                      OutlinedButton(
-                        onPressed: saveMemo,
-                        child: const Text(
-                          '저장',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.send),
+                  onPressed: () {
+                    final message = _controller.text;
+                    _controller.clear();
+                    _sendMessage(message);
+                  },
+                ),
+              ],
             ),
           ),
         ],

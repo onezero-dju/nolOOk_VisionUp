@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class Check extends StatelessWidget {
   const Check({
@@ -7,12 +8,11 @@ class Check extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-      onPressed: () {},
-      icon: Icon(
-        Icons.check,
-        size: MediaQuery.of(context).size.width * 0.12,
-        color: const Color.fromARGB(255, 90, 174, 207),
+    return SizedBox(
+      width: MediaQuery.of(context).size.width * 0.17,
+      height: MediaQuery.of(context).size.height * 0.17,
+      child: SvgPicture.asset(
+        'assets/images/Check.svg',
       ),
     );
   }
