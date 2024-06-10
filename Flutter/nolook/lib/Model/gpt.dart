@@ -3,8 +3,7 @@ import 'dart:convert';
 import 'dart:async';
 
 class GPTService {
-  final String apiKey =
-      'sk-proj-gUYKgq9IxDf6f4rzFzsJT3BlbkFJOVZE3rM5HnUTW9lEUBm2'; // Replace with your actual GPT API Key
+  final String apiKey = ''; // Replace with your actual GPT API Key
   final String apiUrl = 'https://api.openai.com/v1/chat/completions';
 
   Future<String> getKeywordFromText(String text) async {
