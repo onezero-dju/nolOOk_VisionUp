@@ -77,7 +77,9 @@ class _FileListState extends State<FileList> {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             home: Scaffold(
+              backgroundColor: const Color.fromARGB(255, 242, 243, 235),
               appBar: AppBar(
+                backgroundColor: const Color.fromARGB(255, 233, 233, 230),
                 leading: const FolderAdd(),
                 actions: [
                   Row(

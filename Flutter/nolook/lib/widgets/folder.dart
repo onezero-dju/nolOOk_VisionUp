@@ -57,7 +57,13 @@ class _FolderState extends State<Folder> {
                   width: 100,
                   height: 70,
                 ),
-                Text(widget.directoryName),
+                Text(
+                  widget.directoryName,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: MediaQuery.of(context).size.height * 0.018,
+                  ),
+                ),
               ],
             ),
           ),
