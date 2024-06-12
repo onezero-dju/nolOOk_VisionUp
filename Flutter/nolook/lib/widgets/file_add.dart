@@ -9,7 +9,7 @@ class FileAdd extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.13,
+      width: MediaQuery.of(context).size.width * 0.11,
       height: MediaQuery.of(context).size.height * 0.1,
       child: SvgPicture.asset(
         'assets/images/FileAdd.svg',

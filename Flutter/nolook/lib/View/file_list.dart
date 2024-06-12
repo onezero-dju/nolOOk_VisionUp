@@ -60,6 +60,8 @@ class _FileListState extends State<FileList> {
                     context: context,
                     builder: (BuildContext context) {
                       return AlertDialog(
+                        backgroundColor:
+                            const Color.fromARGB(255, 242, 243, 235),
                         title: Text(viewMemoDetails['memoName']),
                         content: const Text(
                             'Flutter is a versatile open-source framework by Google for building natively compiled, multi-platform applications from a single codebase.'),
@@ -94,11 +96,12 @@ class _FileListState extends State<FileList> {
       child: Consumer<FileSelectionController>(
         builder: (context, controller, _) {
           return MaterialApp(
+            theme: ThemeData(fontFamily: 'Jalnan'),
             debugShowCheckedModeBanner: false,
             home: Scaffold(
               backgroundColor: const Color.fromARGB(255, 242, 243, 235),
               appBar: AppBar(
-                backgroundColor: const Color.fromARGB(255, 233, 233, 230),
+                backgroundColor: const Color.fromARGB(255, 242, 243, 235),
                 leading: const FolderAdd(),
                 actions: [
                   Row(
@@ -106,13 +109,13 @@ class _FileListState extends State<FileList> {
                       const FileAdd(),
                       const Share(),
                       SizedBox(
-                        width: MediaQuery.of(context).size.width * 0.17,
-                        height: MediaQuery.of(context).size.height * 0.17,
+                        width: MediaQuery.of(context).size.width * 0.1,
+                        height: MediaQuery.of(context).size.height * 0.1,
                         child: IconButton(
                           icon: SvgPicture.asset(
                             'assets/images/Check.svg',
                           ),
-                          onPressed: controller.toggleSelectionMode,
+                          onPressed: () {},
                         ),
                       ),
                     ],

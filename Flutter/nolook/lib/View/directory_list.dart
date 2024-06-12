@@ -48,11 +48,12 @@ class _DirectoryListState extends State<DirectoryList> {
       child: Consumer<FileSelectionController>(
         builder: (context, controller, _) {
           return MaterialApp(
+            theme: ThemeData(fontFamily: 'Jalnan'),
             debugShowCheckedModeBanner: false,
             home: Scaffold(
               backgroundColor: const Color.fromARGB(255, 242, 243, 235),
               appBar: AppBar(
-                backgroundColor: const Color.fromARGB(255, 233, 233, 230),
+                backgroundColor: const Color.fromARGB(255, 242, 243, 235),
                 leading: const FolderAdd(),
                 actions: [
                   Expanded(

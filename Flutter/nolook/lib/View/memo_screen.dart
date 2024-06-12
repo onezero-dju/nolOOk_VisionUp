@@ -106,7 +106,7 @@ class _MemoScreenState extends State<MemoScreen> {
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 242, 243, 235),
       appBar: AppBar(
-        backgroundColor: const Color.fromARGB(255, 233, 233, 230),
+        backgroundColor: const Color.fromARGB(255, 242, 243, 235),
         leadingWidth: 5000,
         leading: const Expanded(
           child: Row(
@@ -139,67 +139,34 @@ class _MemoScreenState extends State<MemoScreen> {
           ),
         ],
       ),
-      body: const Column(
-        children: [
-          Divider(
-            height: 4,
-            thickness: 1.4,
-            color: Color.fromARGB(255, 200, 211, 161),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  TitleEditor(),
-                  Divider(
-                    height: 10,
-                    thickness: 1.4,
-                    color: Color.fromARGB(255, 200, 211, 161),
-                  ),
-                  Content(),
-                  // Divider(
-                  //   height: 1,
-                  //   thickness: 1,
-                  //   color: Colors.black,
-                  // ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   children: [
-                  //     OutlinedButton(
-                  //       onPressed: () {
-                  //         Navigator.push(
-                  //           context,
-                  //           MaterialPageRoute(
-                  //             builder: (context) => const DirectoryList(),
-                  //           ),
-                  //         );
-                  //       },
-                  //       child: const Text(
-                  //         '취소',
-                  //         style: TextStyle(
-                  //           color: Colors.black,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     SizedBox(
-                  //       width: MediaQuery.of(context).size.width * 0.04,
-                  //     ),
-                  //     OutlinedButton(
-                  //       onPressed: saveDirectory,
-                  //       child: const Text(
-                  //         '저장',
-                  //         style: TextStyle(
-                  //           color: Colors.black,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                ],
+      body: const Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: 15,
+        ),
+        child: Column(
+          children: [
+            Divider(
+              height: 4,
+              thickness: 1.4,
+              color: Color.fromARGB(255, 200, 211, 161),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    TitleEditor(),
+                    Divider(
+                      height: 10,
+                      thickness: 1.4,
+                      color: Color.fromARGB(255, 200, 211, 161),
+                    ),
+                    Content(),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

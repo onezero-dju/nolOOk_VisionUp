@@ -45,7 +45,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      backgroundColor: const Color.fromARGB(255, 242, 243, 235),
+      appBar: AppBar(
+        backgroundColor: const Color.fromARGB(255, 242, 243, 235),
+      ),
       body: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus(); // 키보드를 내리는 동작
@@ -104,7 +107,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     _login();
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.grey, // 버튼 색상 설정
+                    backgroundColor: Colors.black, // 버튼 색상 설정
                     padding: EdgeInsets.symmetric(
                         vertical: MediaQuery.of(context).size.height * 0.02),
                     shape: RoundedRectangleBorder(
@@ -136,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black, // 버튼 색상 설정
+                    backgroundColor: Colors.grey, // 버튼 색상 설정
                     padding: EdgeInsets.symmetric(
                         vertical: MediaQuery.of(context).size.height * 0.02),
                     shape: RoundedRectangleBorder(

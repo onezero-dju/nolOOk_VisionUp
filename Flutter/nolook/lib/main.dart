@@ -31,9 +31,7 @@ class nolOOk extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'nolOOk',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
+      theme: ThemeData(fontFamily: 'Jalnan'),
       home: const LoginScreen(),
     );
   }
