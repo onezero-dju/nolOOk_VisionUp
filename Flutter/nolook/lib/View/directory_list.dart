@@ -63,8 +63,8 @@ class _DirectoryListState extends State<DirectoryList> {
                         const DirectoryNameChangeIcon(),
                         const FileDeleteIcon(),
                         SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.17,
-                          height: MediaQuery.of(context).size.height * 0.17,
+                          width: MediaQuery.of(context).size.width * 0.1,
+                          height: MediaQuery.of(context).size.height * 0.1,
                           child: IconButton(
                             icon: SvgPicture.asset(
                               'assets/images/Check.svg',

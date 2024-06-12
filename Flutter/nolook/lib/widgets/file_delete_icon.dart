@@ -45,6 +45,7 @@ class _FileDeleteIconState extends State<FileDeleteIcon> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
+                  backgroundColor: const Color.fromARGB(255, 233, 233, 230),
                   content: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

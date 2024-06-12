@@ -80,7 +80,8 @@ class _DirectoryNameChangeIconState extends State<DirectoryNameChangeIcon> {
               builder: (BuildContext context) {
                 String newName = '';
                 return AlertDialog(
-                  title: const Text('디렉토리 이름 변경'),
+                  backgroundColor: const Color.fromARGB(255, 233, 233, 230),
+                  title: const Text('폴더 이름 변경'),
                   content: TextFormField(
                     onChanged: (value) {
                       newName = value;
@@ -90,31 +91,65 @@ class _DirectoryNameChangeIconState extends State<DirectoryNameChangeIcon> {
                     ),
                   ),
                   actions: [
-                    TextButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      child: const Text('취소'),
-                    ),
-                    TextButton(
-                      onPressed: () async {
-                        if (newName.isNotEmpty) {
-                          await Provider.of<DirectoryController>(context,
-                                  listen: false)
-                              .directoryNameChange(
-                                  selectedDirectoryId, newName);
-
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.24,
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      child: OutlinedButton(
+                        onPressed: () {
                           Navigator.of(context).pop();
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (BuildContext context) =>
-                                  const DirectoryList(),
-                            ),
-                          );
-                        }
-                      },
-                      child: const Text('확인'),
+                        },
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(70),
+                          ),
+                          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                          backgroundColor:
+                              const Color.fromARGB(255, 226, 226, 193),
+                        ),
+                        child: const Text(
+                          '취소',
+                          style: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.02,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.24,
+                      height: MediaQuery.of(context).size.height * 0.05,
+                      child: OutlinedButton(
+                        onPressed: () async {
+                          if (newName.isNotEmpty) {
+                            await Provider.of<DirectoryController>(context,
+                                    listen: false)
+                                .directoryNameChange(
+                                    selectedDirectoryId, newName);
+
+                            Navigator.of(context).pop();
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const DirectoryList(),
+                              ),
+                            );
+                          }
+                        },
+                        style: OutlinedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(70),
+                          ),
+                          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                          backgroundColor:
+                              const Color.fromARGB(255, 226, 226, 193),
+                        ),
+                        child: const Text(
+                          '확인',
+                        ),
+                      ),
                     ),
                   ],
                 );
