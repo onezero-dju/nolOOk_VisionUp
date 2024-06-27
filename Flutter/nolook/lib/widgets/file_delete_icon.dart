@@ -79,6 +79,7 @@ class _FileDeleteIconState extends State<FileDeleteIcon> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
+                  backgroundColor: const Color.fromARGB(255, 242, 243, 235),
                   title: const Text('Directory'),
                   content: const Text('정말로 삭제하시겠습니까?'),
                   actions: [
@@ -92,7 +93,7 @@ class _FileDeleteIconState extends State<FileDeleteIcon> {
                           child: const Text(
                             '취소',
                             style: TextStyle(
-                              color: Colors.red,
+                              color: Colors.black,
                             ),
                           ),
                         ),

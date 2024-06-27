@@ -60,12 +60,16 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'nolOOk',
-                  style: TextStyle(
-                    fontSize: MediaQuery.of(context).size.width * 0.09,
-                    fontWeight: FontWeight.bold,
-                  ),
+                Column(
+                  children: [
+                    Text(
+                      'nolOOk',
+                      style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.width * 0.09,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.14),
                 CustomTextFormField(

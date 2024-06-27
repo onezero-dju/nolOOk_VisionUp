@@ -44,6 +44,7 @@ class _DirectoryNameChangeIconState extends State<DirectoryNameChangeIcon> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
+                  backgroundColor: const Color.fromARGB(255, 242, 243, 235),
                   content: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -80,7 +81,7 @@ class _DirectoryNameChangeIconState extends State<DirectoryNameChangeIcon> {
               builder: (BuildContext context) {
                 String newName = '';
                 return AlertDialog(
-                  backgroundColor: const Color.fromARGB(255, 233, 233, 230),
+                  backgroundColor: const Color.fromARGB(255, 242, 243, 235),
                   title: const Text('폴더 이름 변경'),
                   content: TextFormField(
                     onChanged: (value) {
@@ -91,65 +92,59 @@ class _DirectoryNameChangeIconState extends State<DirectoryNameChangeIcon> {
                     ),
                   ),
                   actions: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.24,
-                      height: MediaQuery.of(context).size.height * 0.05,
-                      child: OutlinedButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(70),
-                          ),
-                          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                          backgroundColor:
-                              const Color.fromARGB(255, 226, 226, 193),
-                        ),
-                        child: const Text(
-                          '취소',
-                          style: TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.02,
-                    ),
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.24,
-                      height: MediaQuery.of(context).size.height * 0.05,
-                      child: OutlinedButton(
-                        onPressed: () async {
-                          if (newName.isNotEmpty) {
-                            await Provider.of<DirectoryController>(context,
-                                    listen: false)
-                                .directoryNameChange(
-                                    selectedDirectoryId, newName);
-
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        OutlinedButton(
+                          onPressed: () {
                             Navigator.of(context).pop();
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                builder: (BuildContext context) =>
-                                    const DirectoryList(),
-                              ),
-                            );
-                          }
-                        },
-                        style: OutlinedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(70),
+                          },
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(70),
+                            ),
+                            foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                            backgroundColor:
+                                const Color.fromARGB(255, 242, 243, 235),
                           ),
-                          foregroundColor: const Color.fromARGB(255, 0, 0, 0),
-                          backgroundColor:
-                              const Color.fromARGB(255, 226, 226, 193),
+                          child: const Text(
+                            '취소',
+                            style: TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
                         ),
-                        child: const Text(
-                          '확인',
+                        OutlinedButton(
+                          onPressed: () async {
+                            if (newName.isNotEmpty) {
+                              await Provider.of<DirectoryController>(context,
+                                      listen: false)
+                                  .directoryNameChange(
+                                      selectedDirectoryId, newName);
+
+                              Navigator.of(context).pop();
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      const DirectoryList(),
+                                ),
+                              );
+                            }
+                          },
+                          style: OutlinedButton.styleFrom(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(70),
+                            ),
+                            foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                            backgroundColor:
+                                const Color.fromARGB(255, 242, 243, 235),
+                          ),
+                          child: const Text(
+                            '확인',
+                          ),
                         ),
-                      ),
+                      ],
                     ),
                   ],
                 );
