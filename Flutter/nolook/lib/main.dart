@@ -7,6 +7,7 @@ import 'package:nolook/providers/selected_directory_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:nolook/view/login_screen.dart';
 
+//앱의 시작점
 void main() {
   runApp(
     MultiProvider(
